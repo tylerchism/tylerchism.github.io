@@ -1,0 +1,51 @@
+body {
+    background: white;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+header {
+    background-color: transparent;
+    background-size: 100%;
+    box-shadow: gray 5px 5px 5px;
+    height: 30px;
+    padding-top: 20px;
+    
+}
+
+header a {
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: upper-case;
+    margin-left: 30px;
+    
+}
+
+div.very-top {
+    text-align: left;
+    font-size: 13px;
+}
+
+div.very-top a {
+    color: black;
+    margin-top: 40px;
+}
+
+button {
+    background: transparent;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgb(158, 137, 137);
+    color: black;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 10px;
+}
+
+figure {
+    text-align: center;
+}
+
+section {
+    position: center;
+}
