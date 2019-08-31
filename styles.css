@@ -192,18 +192,18 @@ section.more {
   
 }
 
-#block {
+.block {
     display: flex;
     font-size: 14px;
 }
 
-#block1 {
+.block1 {
     width: 300px;
     float: left;
     
 }
 
-#block2 {
+.block2 {
     width: 400px;
     margin-left: 150px;
 }
