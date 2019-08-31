@@ -168,7 +168,7 @@ nav li {
 }
 
 section.highlight {
-    background-color: white;
+    background-color: rgb(240, 238, 238);
     border-left: 6px blue;
     color: black;
     height: 400px;
