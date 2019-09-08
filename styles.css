@@ -29,7 +29,7 @@ ul {
 
 header {
     background-color: black;
-    background-image: url("images/stockwatch.jpg");
+    background-image: url("images/background.jpeg");
     background-size: 100%;
     background-position: center;
     height: 400px;
@@ -39,7 +39,7 @@ header {
 }
 
 header.more {
-    background-image: url("images/lakesunset.jpg");
+    background-image: url("images/nodes.png");
     height: 300px;
 }
 
@@ -65,6 +65,7 @@ div.very-top a {
     color: black;
     margin-right: 10px;
     transition-duration: .4s;
+   
 }
 
 div.very-top a:hover {
@@ -225,6 +226,24 @@ i.rotate90 {
     display: none;
 }
 
+.resume #skills button {
+    width: 50%;
+}
+
+.resume button figure {
+    position: flex;
+}
+
+.resume button figcaption {
+    text-align: left;
+}
+
+.resume img {
+    width: 150px;
+    float: left;
+    margin-right: 60px;
+}
+
 .download {
     height: 300px;
     display: flex;
@@ -265,17 +284,37 @@ i.rotate90 {
     margin-left: -20px;
 }
 
+section.more div.more {
+   margin-bottom: 150px;
+   margin-top: 150px;
+}
+
 .more p {
     border-width: 10px;
     border-color: aliceblue;
     border-left-style: solid;
+    margin-left: 40px;
+    padding-left: 40px;
     
 }
 
+.more img {
+    float: right;
+    height: 200px;
+    margin: 0 20px 40px 20px;
+    border-radius: 5px;
+    box-shadow: gray 2px 2px 10px;
+}
+
+#vert  {
+    float: left;
+}
+
+
+
 footer {
-    
-    background: black;
-    
+   
+    background-color: black;
     color: white;
     padding: 20px;
     text-align: center;
@@ -304,6 +343,7 @@ footer h1 {
     size: 9;
     transition: .25s;
 }
+
 
 .fab:hover {
     color: white;
