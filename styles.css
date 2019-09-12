@@ -199,14 +199,14 @@ section.more {
 }
 
 .block1 {
-    width: 300px;
+    width: 50%;
     float: left;
     
 }
 
 .block2 {
-    width: 400px;
-    margin-left: 150px;
+    width: 50%;
+    
 }
 
 i.fa {
@@ -222,12 +222,17 @@ i.rotate90 {
     transform: rotate(90deg);
 }
 
+.resume {
+    max-width: 700px;
+    margin: auto;
+}
+
 .resume div {
     display: none;
 }
 
 .resume #skills button {
-    width: 50%;
+    width: 80%;
 }
 
 .resume button figure {
@@ -241,7 +246,6 @@ i.rotate90 {
 .resume img {
     width: 150px;
     float: left;
-    margin-right: 60px;
 }
 
 .download {
@@ -277,6 +281,11 @@ i.rotate90 {
     border-style: outset;
     border-color: white;
     border-width: 3px;
+}
+
+#moresection {
+    max-width: 900px;
+    margin: auto;
 }
 
 .more h1 {
