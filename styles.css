@@ -132,7 +132,6 @@ nav li {
     text-shadow: none;
 }
 
-
 .features {
     background: white;
     color: black;
@@ -141,7 +140,10 @@ nav li {
     padding: 40px;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
+
+
 .features figure {
     height: 100px;
     margin: auto;
@@ -172,7 +174,7 @@ section.highlight {
     background-color: rgb(240, 238, 238);
     border-left: 6px blue;
     color: black;
-    height: 400px;
+    
     padding: 20px; 
      
 }
