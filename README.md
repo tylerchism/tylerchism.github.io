@@ -4,7 +4,7 @@ This is the repo where my website files are hosted. feel free to explore them. I
 
 ## This website
 
-My goal with this website is to create a place where potential employers can go and hopefully get a good user experience as they navigate through my background and skills. An added benefit is that along the way I was able to practice website development skills. I will continually add to and update this website to enhance the user experience as much as possible by optimising aesthetics and fromating the most comprehensive content possible.
+My goal with this website is to create a place where potential employers can go and hopefully get a good user experience as they navigate through my background and skills. An added benefit is that along the way I was able to practice website development skills. I will continually add to and update this website to enhance the user experience as much as possible by optimising aesthetics and formating the most comprehensive content possible.
 
 ## My goals
 
