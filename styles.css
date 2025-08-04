@@ -519,64 +519,141 @@ section {
     padding: var(--space-8) 0;
 }
 
-/* Legacy Resume Styles (for backward compatibility) */
+/* Resume Content Styles */
 .resume {
-    max-width: 700px;
+    max-width: 900px;
     margin: auto;
     padding: var(--space-8);
 }
 
+.resume > ul {
+    list-style: none;
+    padding: 0;
+}
+
+.resume > ul > li {
+    margin-bottom: var(--space-4);
+}
+
 .resume div {
     display: none;
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-4);
+    border-left: 4px solid var(--primary-color);
 }
 
 .resume button {
     background: white;
     border: 1px solid var(--gray-300);
-    border-radius: var(--radius-md);
-    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-6);
     width: 100%;
     text-align: left;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-normal);
     margin-bottom: var(--space-2);
+    box-shadow: var(--shadow-sm);
 }
 
 .resume button:hover {
     background: var(--gray-50);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
 .resume button h2,
 .resume button h4 {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     color: var(--gray-900);
+    margin: 0;
+    font-weight: 600;
+}
+
+.resume button h2 {
+    font-size: var(--text-xl);
+}
+
+.resume button h4 {
+    font-size: var(--text-lg);
 }
 
 .resume button figure {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    margin: 0;
 }
 
 .resume img {
-    width: 150px;
-    height: 100px;
+    width: 120px;
+    height: 80px;
     object-fit: cover;
     border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Resume Content Blocks */
+.resume-content {
+    padding: var(--space-4) 0;
+}
+
+.resume-content p {
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin-bottom: var(--space-4);
+    text-indent: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.resume-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-4);
+}
+
+.resume-content li {
+    position: relative;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-2);
+    color: var(--gray-700);
+    line-height: 1.6;
+}
+
+.resume-content li:before {
+    content: "•";
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: var(--space-2);
 }
 
 .block {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-8);
     margin: var(--space-6) 0;
 }
 
 .block1,
 .block2 {
-    flex: 1;
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.block h4 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-3);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: var(--space-2);
 }
 
 .block ul {
@@ -585,13 +662,19 @@ section {
 }
 
 .block li {
+    position: relative;
+    padding-left: var(--space-5);
     margin-bottom: var(--space-2);
-    color: var(--gray-600);
+    color: var(--gray-700);
+    line-height: 1.5;
 }
 
-.block h4 {
-    color: var(--gray-900);
-    margin-bottom: var(--space-3);
+.block li:before {
+    content: "▸";
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
 }
 
 /* Font Awesome Icons */
@@ -825,6 +908,103 @@ i.rotate90 {
     color: var(--gray-600);
     margin-bottom: var(--space-6);
     line-height: 1.6;
+}
+
+/* More Page Styles */
+.current-interests {
+    padding: var(--space-16) 0;
+}
+
+.interests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8);
+}
+
+.interest-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    text-align: center;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--gray-200);
+}
+
+.interest-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.interest-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-6);
+    color: white;
+    font-size: var(--text-2xl);
+}
+
+.interest-card h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: var(--space-4);
+}
+
+.interest-card p {
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+    line-height: 1.6;
+}
+
+.about-section,
+.home-section {
+    padding: var(--space-16) 0;
+}
+
+.about-section {
+    background: var(--gray-50);
+}
+
+.home-section {
+    background: white;
+}
+
+.home-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+}
+
+.home-text h2,
+.about-text h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-6);
+}
+
+.home-text p,
+.about-text p {
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+    line-height: 1.7;
+    text-indent: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.home-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Smooth scroll offset for fixed navbar */
