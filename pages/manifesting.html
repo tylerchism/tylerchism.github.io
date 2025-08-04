@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Manifestation Framework</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .node {
+            margin: 10px;
+            position: relative;
+        }
+        
+        .node-button {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            min-width: 200px;
+            position: relative;
+        }
+        
+        .node-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(145deg, #5a67d8, #6b46c1);
+        }
+        
+        .node-button:active {
+            transform: translateY(0);
+        }
+        
+        .main-node .node-button {
+            background: linear-gradient(145deg, #48bb78, #38a169);
+            font-size: 20px;
+            padding: 20px 35px;
+            min-width: 300px;
+        }
+        
+        .main-node .node-button:hover {
+            background: linear-gradient(145deg, #38a169, #2f855a);
+        }
+        
+        .sub-node .node-button {
+            background: linear-gradient(145deg, #ed8936, #dd6b20);
+            min-width: 250px;
+        }
+        
+        .sub-node .node-button:hover {
+            background: linear-gradient(145deg, #dd6b20, #c05621);
+        }
+        
+        .detail-node .node-button {
+            background: linear-gradient(145deg, #4299e1, #3182ce);
+            font-size: 14px;
+            min-width: 180px;
+        }
+        
+        .detail-node .node-button:hover {
+            background: linear-gradient(145deg, #3182ce, #2c5aa0);
+        }
+        
+        .children {
+            margin-left: 40px;
+            margin-top: 20px;
+            display: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .children.expanded {
+            display: block;
+            opacity: 1;
+        }
+        
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .info-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            width: 350px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .info-panel.active {
+            transform: translateX(0);
+        }
+        
+        .info-panel h3 {
+            color: #4a5568;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        
+        .info-panel p {
+            line-height: 1.6;
+            color: #718096;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #a0aec0;
+        }
+        
+        .close-btn:hover {
+            color: #4a5568;
+        }
+        
+        .connector {
+            width: 2px;
+            height: 30px;
+            background: linear-gradient(to bottom, #cbd5e0, transparent);
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .info-panel {
+                position: fixed;
+                right: 10px;
+                left: 10px;
+                top: 10px;
+                width: auto;
+                transform: translateY(-100vh);
+            }
+            
+            .info-panel.active {
+                transform: translateY(0);
+            }
+            
+            .row {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Manifestation Framework</h1>
+        
+        <div class="tree">
+            <!-- Root Node -->
+            <div class="node main-node">
+                <button class="node-button" onclick="toggleInfo('manifestation')">
+                    Manifestation Practice
+                </button>
+                <div class="connector"></div>
+            </div>
+            
+            <!-- Main Branches -->
+            <div class="row">
+                <div class="branch">
+                    <div class="node sub-node">
+                        <button class="node-button" onclick="toggleInfo('visualization')">
+                            🎯 Visualization
+                        </button>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Visualization Sub-branches -->
+                    <div class="row">
+                        <div class="branch">
+                            <div class="node detail-node">
+                                <button class="node-button" onclick="toggleInfo('scenario-creation')">
+                                    Detailed Scenario Creation
+                                </button>
+                            </div>
+                            <div class="children">
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('physical-env')">
+                                        Physical Environment
+                                    </button>
+                                </div>
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('relationships')">
+                                        Relationships
+                                    </button>
+                                </div>
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('experiences')">
+                                        Activities/Experiences
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="branch">
+                            <div class="node detail-node">
+                                <button class="node-button" onclick="toggleInfo('emotional-connection')">
+                                    Emotional Connection
+                                </button>
+                            </div>
+                            <div class="children">
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('core-feelings')">
+                                        Identify Core Feelings
+                                    </button>
+                                </div>
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('eye-technique')">
+                                        Eye Position Technique
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="branch">
+                    <div class="node sub-node">
+                        <button class="node-button" onclick="toggleInfo('acceptance')">
+                            🕊️ Acceptance/Release
+                        </button>
+                    </div>
+                    <div class="connector"></div>
+                    
+                    <!-- Acceptance Sub-branches -->
+                    <div class="row">
+                        <div class="branch">
+                            <div class="node detail-node">
+                                <button class="node-button" onclick="toggleInfo('letting-be')">
+                                    Letting Be
+                                </button>
+                            </div>
+                            <div class="children">
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('emotional-awareness')">
+                                        Emotional Awareness
+                                    </button>
+                                </div>
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('non-resistance')">
+                                        Non-Resistance
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="branch">
+                            <div class="node detail-node">
+                                <button class="node-button" onclick="toggleInfo('alignment-practice')">
+                                    Alignment Practice
+                                </button>
+                            </div>
+                            <div class="children">
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('present-alignment')">
+                                        Present Reality Alignment
+                                    </button>
+                                </div>
+                                <div class="node detail-node">
+                                    <button class="node-button" onclick="toggleInfo('identity-integration')">
+                                        Identity Integration
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info Panel -->
+    <div class="info-panel" id="infoPanel">
+        <button class="close-btn" onclick="closeInfo()">&times;</button>
+        <div id="infoContent">
+            <h3>Select a node to view details</h3>
+            <p>Click on any node in the manifestation framework to learn more about that specific practice or concept.</p>
+        </div>
+    </div>
+    
+    <script>
+        const nodeInfo = {
+            'manifestation': {
+                title: 'Manifestation Practice',
+                content: `The complete manifestation framework consists of two interconnected components that work together to align your inner state with your desired reality. This is not about magical thinking, but about systematically addressing both the visionary and emotional aspects of personal transformation.
+
+The practice involves regularly engaging with both visualization and acceptance/release work to create lasting change in your identity and belief systems.`
+            },
+            'visualization': {
+                title: 'Visualization Component',
+                content: `The practice of creating detailed mental scenarios of your ideal life. This involves more than just daydreaming - it's about creating vivid, emotionally-rich experiences in your mind.
+
+Key aspects:
+• Create specific, detailed scenarios (your dream house, relationships, lifestyle)
+• Focus on how you FEEL in these scenarios
+• Use techniques like specific eye positioning to enhance the practice
+• Allow yourself to dream big without limitations
+
+The emotions you feel during visualization are the target feelings you're trying to cultivate in your actual life.`
+            },
+            'scenario-creation': {
+                title: 'Detailed Scenario Creation',
+                content: `Building rich, specific mental movies of your ideal life. The more detailed and vivid, the more effective the practice becomes.
+
+Process:
+• Start with a specific scene (waking up in your dream house)
+• Add layers of detail (architecture, furnishings, atmosphere)
+• Include other people and your relationships with them
+• Focus on activities and experiences that matter to you
+• Make it feel real and present, not like a distant fantasy
+
+Remember: The goal isn't the stuff itself, but the feelings and identity that come with living this way.`
+            },
+            'physical-env': {
+                title: 'Physical Environment',
+                content: `Visualizing the spaces and places where your ideal life unfolds. This could be your home, workplace, or places you travel to.
+
+Examples:
+• Your dream house: architecture, rooms, views, atmosphere
+• Workspaces that inspire and energize you  
+• Natural environments where you feel most alive
+• Travel destinations and the experiences they provide
+
+Focus on how these environments make you FEEL rather than just their material aspects. What emotions arise when you imagine being in these spaces?`
+            },
+            'relationships': {
+                title: 'Relationships',
+                content: `Visualizing the quality and depth of relationships in your ideal life. This goes beyond just imagining people - it's about the feeling of connection and love.
+
+Consider:
+• Romantic relationships: the depth of intimacy and connection
+• Family relationships: quality time and mutual support
+• Friendships: shared adventures and deep conversations
+• Professional relationships: collaboration and mutual respect
+
+The key is feeling the emotions of being truly seen, appreciated, and loved. What does it feel like to have these connections in your life?`
+            },
+            'experiences': {
+                title: 'Activities/Experiences',
+                content: `Imagining the activities, adventures, and daily experiences of your ideal life. Often these are more important than material possessions.
+
+Examples:
+• Travel experiences: exploring new cultures, landscapes
+• Creative pursuits: expressing yourself through art, music, writing
+• Physical activities: sports, outdoor adventures, fitness
+• Learning experiences: acquiring new skills, knowledge
+• Service activities: contributing to causes you care about
+
+Focus on experiences that would make you feel most alive, fulfilled, and authentic to who you truly are.`
+            },
+            'emotional-connection': {
+                title: 'Emotional Connection',
+                content: `The most crucial aspect of visualization - connecting with the feelings that your ideal scenarios would generate. These emotions are what you're ultimately trying to cultivate.
+
+The process:
+• As you visualize, pay close attention to how you feel
+• Identify the core emotions: joy, peace, love, excitement, fulfillment
+• Amplify these feelings during the visualization
+• Remember these are the feelings you're seeking to create in your current life
+
+These emotions become your internal compass, guiding you toward choices and actions that align with your true desires.`
+            },
+            'core-feelings': {
+                title: 'Identify Core Feelings',
+                content: `Learning to recognize and name the specific emotions that arise during your visualizations. These core feelings are what you're actually seeking through manifestation.
+
+Common core feelings:
+• Peace and contentment
+• Joy and excitement  
+• Love and connection
+• Freedom and autonomy
+• Purpose and meaning
+• Security and stability
+• Adventure and novelty
+
+Practice: During visualization, pause and ask "How do I feel right now?" Name the specific emotions rather than staying in the visual details.`
+            },
+            'eye-technique': {
+                title: 'Eye Position Technique',
+                content: `A specific physical technique to enhance visualization by positioning your eyes in a way that promotes vivid mental imagery.
+
+The technique:
+• Close your eyes or look slightly upward (about 20-30 degrees above horizontal)
+• This eye position is associated with visual memory and imagination
+• Some practitioners find looking up and to the right enhances creative visualization
+• Experiment to find what works best for you
+
+This simple physical adjustment can significantly improve the clarity and emotional impact of your visualizations.`
+            },
+            'acceptance': {
+                title: 'Acceptance/Release Component',
+                content: `The complementary practice to visualization that deals with the internal resistance, limiting beliefs, and emotional patterns that arise when you visualize your ideal life.
+
+This component has two main aspects:
+1. Letting Be: Allowing the emotions and objections that arise without resistance
+2. Alignment Practice: Finding ways your desired reality is already present in your life
+
+This prevents visualization from becoming frustrating or creating more neediness, and instead transforms your internal landscape to be receptive to your desires.`
+            },
+            'letting-be': {
+                title: 'Letting Be',
+                content: `The practice of allowing whatever emotions, thoughts, or objections arise during visualization to exist without trying to fix, change, or eliminate them.
+
+Key principles:
+• When objections arise ("this is impossible," "I don't deserve this"), don't fight them
+• Instead, feel the emotion behind the objection
+• Think of these emotions as inner children who developed protective beliefs
+• Let these emotional parts be seen and felt without judgment
+• Lean into difficult emotions rather than avoiding them
+
+This creates space for old patterns to release naturally instead of being suppressed.`
+            },
+            'emotional-awareness': {
+                title: 'Emotional Awareness',
+                content: `Developing the ability to recognize and feel the emotions that arise when you visualize, particularly the resistant or fearful ones.
+
+The process:
+• Notice when visualization brings up emotions like fear, sadness, or anger
+• Recognize these as parts of you that developed protective beliefs (often in childhood)
+• See these emotions as inner children who need attention, not problems to solve
+• Practice feeling these emotions in your body without trying to change them
+
+This awareness is the first step in allowing old patterns to transform naturally.`
+            },
+            'non-resistance': {
+                title: 'Non-Resistance',
+                content: `The practice of not fighting against the difficult emotions or limiting beliefs that arise during manifestation work.
+
+Techniques:
+• When you notice resistance, breathe into it rather than pushing it away
+• Lean into uncomfortable feelings to help them move through you
+• Avoid trying to convince yourself that limiting beliefs are wrong
+• Let contradictory thoughts and feelings coexist without needing to resolve them immediately
+
+Non-resistance allows your emotional system to naturally release old patterns rather than reinforcing them through struggle.`
+            },
+            'alignment-practice': {
+                title: 'Alignment Practice',
+                content: `Finding ways that your visualized desires are already present in your current life, which builds gratitude and reduces neediness around your goals.
+
+Two main approaches:
+1. Present Reality Alignment: Finding evidence that you already have what you desire
+2. Identity Integration: Collecting evidence that supports your desired identity
+
+This practice shifts you from "I need this to be happy" to "I already have this in many ways and am grateful for more." This removes the desperate energy that often blocks manifestation.`
+            },
+            'present-alignment': {
+                title: 'Present Reality Alignment',
+                content: `The practice of recognizing how your current life already contains elements of what you're visualizing.
+
+Examples:
+• If you desire a large property for recreation, you might realize you have access to national forests nearby
+• If you want loving relationships, you might recognize the love already present from family or friends  
+• If you want freedom to travel, you might appreciate the freedom you do have in your current location
+
+This builds genuine gratitude and reduces the sense that your happiness depends on external changes. You start to see abundance that was previously invisible.`
+            },
+            'identity-integration': {
+                title: 'Identity Integration',
+                content: `Collecting evidence from your past and present that supports the identity you want to embody, rather than focusing on evidence of limitation.
+
+The process:
+• If you want to be "good with relationships," recall times when you did connect well with others
+• If you want to be "financially abundant," remember times when money flowed easily to you
+• If you want to be "creative," acknowledge the creative things you've already done
+
+Your mind forms identity based on evidence. By consciously collecting positive evidence, you can shift your self-concept to align with your desires. The mind wants evidence, not just positive affirmations.`
+            }
+        };
+        
+        function toggleInfo(nodeId) {
+            const panel = document.getElementById('infoPanel');
+            const content = document.getElementById('infoContent');
+            const info = nodeInfo[nodeId];
+            
+            if (info) {
+                content.innerHTML = `
+                    <h3>${info.title}</h3>
+                    <p>${info.content.replace(/\n/g, '<br><br>')}</p>
+                `;
+                panel.classList.add('active');
+            }
+        }
+        
+        function closeInfo() {
+            const panel = document.getElementById('infoPanel');
+            panel.classList.remove('active');
+        }
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('infoPanel');
+            const isClickInside = panel.contains(event.target) || event.target.classList.contains('node-button');
+            
+            if (!isClickInside) {
+                panel.classList.remove('active');
+            }
+        });
+        
+        // Add some subtle animations on load
+        window.addEventListener('load', function() {
+            const nodes = document.querySelectorAll('.node');
+            nodes.forEach((node, index) => {
+                node.style.opacity = '0';
+                node.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    node.style.transition = 'all 0.5s ease';
+                    node.style.opacity = '1';
+                    node.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
