@@ -1,93 +1,200 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Chism, Tyler</title>
-        <link rel="stylesheet" href="styles.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-        <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
-        <meta name="google-site-verification" content="qGbv4tn5VBEEBSnBRvF_2foVsebj3QWm0AjykTsH1dw" />
-    </head>
-    <body>
-        <header>
-            <nav>
-                <div class="very-top">
-                        <a href="tel:870.321.5816"><i class="fas fa-phone"></i> 870.321.5816</a>
-                        <a href="mailto:tchism4@gmail.com"><i class="fas fa-envelope-square"></i> tchism4@gmail.com</a>
-                </div>
-                <div id="navbar" class="main scrolled">
-                  <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="pages/interactive-resume.html">Interactive Resume</a></li>
-                    <li><a href="pages/resume-download.html">Resume Download</a></li>
-                    <li><a href="pages/adtest.html">Adtech</a></li>
-                    <li><a href="pages/more.html">More</a></li>
-                </ul>  
-                </div>
-                
-            </nav>
-        </header>
-        <section class="features">
-           <!-- "this website was created for xyz purpose
-        then include inline pictures of featured content 
-    with buttons below to go there-->
-         <figure>
-             <a href="pages/interactive-resume.html">
-                <img src="images/engineering2.jpeg" alt="team working">
-                <figcaption>See detailed work history on interactive resume</figcaption></a>
-         </figure> 
-         <figure>
-             <a href="pages/more.html">
-            <img src="images/code2.jpeg" alt="code">
-            <figcaption>Current Projects</figcaption></a>
-         </figure> 
-         <figure>
-             <a href="pages/more.html#about">
-                <img src="images/me.jpeg" alt="brain data">
-                <figcaption>About Me</figcaption></a>
-         </figure> 
-         <figure>
-             <a href="pages/more.html#home">
-                <img src="images/riverview2.jpg" alt="view of river">
-                <figcaption>Home Life</figcaption></a>
-         </figure>  
-         
-        </section>
-        <section class="highlight">
-            <p>
-                <img src="images/eq2.jpg" alt="screenshot of eq test">
-                I try to bring as much value as I can to whatever environment I find myself
-                in. By nature, I am a fundamentalist, constantly seeking the unifying theory that
-                explains and accounts for multiple paradigms. In practice and in trade, I am an engineer
-                constantly working to solve problems by getting my hands dirty and putting the time in to 
-                create solutions. I value in others: emotional intelligence, a thirst for knowledge, a strong work 
-                ethic, and motivation to continually grow and improve.
-            </p>
-            <p>
-                Each day I work to improve my communication skills as well as my technical
-                skills. The more I can improve these things while prioritizing mental and physical health
-                the more I can contribute to the world and advance society to a type 1 civilization. Feel free 
-                to pop over to my <a href="pages/more.html#about">about me</a> section to learn more, and don't 
-                hesitate to contact me anytime.
-            </p>
-        </section>
-        <footer>
-            <!--footer will have three sections the top having 
-            address phone and email, all with symbols
-        the middle will have a large section with an about me 
-    as well as a search bar and link to github, the very bottom
-will be a footer that contains minimal info-->
-            <h1>Connect with me</h1>
-            <div class="media">
-                <ul>
-                    <li><a href="https://github.com/tylerchism"><i class="fab fa-github-square fa-3x"></i></a> </li>
-                    <li><a href="https://www.linkedin.com/in/tyler-chism-a76b6891/"><i class="fab fa-linkedin fa-3x"></i></a> </li>
-                    <li><a href="https://www.goodreads.com/user/show/12498217-tyler-chism"><i class="fab fa-goodreads fa-3x"></i></a></li>
-                </ul>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler Chism</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
+    <meta name="google-site-verification" content="qGbv4tn5VBEEBSnBRvF_2foVsebj3QWm0AjykTsH1dw" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">Tyler Chism</a>
             </div>
-        </footer>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="pages/interactive-resume.html" class="nav-link">Resume</a>
+                <a href="pages/manifesting.html" class="nav-link">Manifesting</a>
+                <a href="pages/more.html" class="nav-link">More</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Hello, I'm <span class="gradient-text">Tyler</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Engineer, Creator, Explorer of Ideas
+                </p>
+                <p class="hero-description">
+                    I'm passionate about bringing value through engineering, continuous learning, 
+                    and exploring the intersection of technology, consciousness, and human potential.
+                </p>
+                <div class="hero-buttons">
+                    <a href="pages/interactive-resume.html" class="btn btn-primary">
+                        <i class="fas fa-user"></i>
+                        View Resume
+                    </a>
+                    <a href="pages/manifesting.html" class="btn btn-secondary">
+                        <i class="fas fa-brain"></i>
+                        Explore Ideas
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <img src="images/me.jpeg" alt="Tyler Chism" class="hero-image">
+                    <div class="hero-card-content">
+                        <h3>Currently Exploring</h3>
+                        <div class="current-interests">
+                            <span class="interest-tag">Consciousness</span>
+                            <span class="interest-tag">Technology</span>
+                            <span class="interest-tag">Manifestation</span>
+                            <span class="interest-tag">Engineering</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Explore My World</h2>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3>Professional Journey</h3>
+                    <p>Explore my work history, skills, and technical expertise across multiple disciplines.</p>
+                    <a href="pages/interactive-resume.html" class="feature-link">
+                        View Interactive Resume <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Manifestation Framework</h3>
+                    <p>An interactive exploration of consciousness, visualization, and personal transformation.</p>
+                    <a href="pages/manifesting.html" class="feature-link">
+                        Explore Framework <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Projects & Ideas</h3>
+                    <p>Current projects, research interests, and thoughts on technology and life.</p>
+                    <a href="pages/more.html" class="feature-link">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Me</h2>
+                    <p>
+                        I'm a fundamentalist by nature, constantly seeking unifying theories that 
+                        explain and account for multiple paradigms. In practice, I'm an engineer 
+                        who loves solving problems by getting hands dirty and putting in the work 
+                        to create meaningful solutions.
+                    </p>
+                    <p>
+                        I value emotional intelligence, curiosity, strong work ethic, and the 
+                        motivation to continually grow and improve. Each day I work to enhance 
+                        both my communication and technical skills while prioritizing mental 
+                        and physical health.
+                    </p>
+                    <div class="core-values">
+                        <div class="value-item">
+                            <i class="fas fa-heart"></i>
+                            <span>Emotional Intelligence</span>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-book-open"></i>
+                            <span>Continuous Learning</span>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-tools"></i>
+                            <span>Problem Solving</span>
+                        </div>
+                        <div class="value-item">
+                            <i class="fas fa-seedling"></i>
+                            <span>Personal Growth</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <img src="images/eq2.jpg" alt="EQ Assessment" class="about-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:tchism4@gmail.com">tchism4@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:870.321.5816">870.321.5816</a>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="https://github.com/tylerchism" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/tyler-chism-a76b6891/" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.goodreads.com/user/show/12498217-tyler-chism" class="social-link" aria-label="Goodreads">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Tyler Chism. Built with curiosity and code.</p>
+        </div>
+    </footer>
+
     <script src="JS/jquery-3.4.1.min.js"></script>
     <script src="JS/main.js"></script>
-    
-  
-    </body>
+</body>
 </html>
