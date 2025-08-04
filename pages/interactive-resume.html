@@ -1,36 +1,58 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Chism, Tyler - Resume</title>
-        <link rel="stylesheet" href="../styles.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-        <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
-    </head>
-    <body>
-        <header class="iresume">
-            <nav>
-                <div class="very-top">
-                        <a href="tel:870.321.5816"><i class="fas fa-phone"></i> 870.321.5816</a>
-                        <a href="mailto:tchism4@gmail.com"><i class="fas fa-envelope-square"></i> tchism4@gmail.com</a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler Chism - Interactive Resume</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Tyler Chism</a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="interactive-resume.html" class="nav-link">Resume</a>
+                <a href="manifesting.html" class="nav-link">Manifesting</a>
+                <a href="more.html" class="nav-link">More</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="resume-header">
+        <div class="container">
+            <div class="resume-intro">
+                <h1>Interactive Resume</h1>
+                <p>Explore my professional journey, skills, and experience through this interactive format.</p>
+                <div class="contact-quick">
+                    <a href="mailto:tchism4@gmail.com" class="contact-quick-item">
+                        <i class="fas fa-envelope"></i>
+                        tchism4@gmail.com
+                    </a>
                 </div>
-                <div id="navbar" class="scrolled">
-                  <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="interactive-resume.html">Interactive Resume</a></li>
-                    <li><a href="resume-download.html">Resume Download</a></li>
-                    <li><a href="more.html">More</a></li>
-                </ul>  
-                </div>
-                
-            </nav>
-        </header>
+            </div>
+        </div>
+    </section>
+    <!-- Resume Content -->
+    <div class="container">
         <section class="resume">
             <ul>
                 <li><button data-panelid="education"><h2><i class="fas fa-chevron-right"></i> Education</h2> </button>
                 <div id="education">
                     <ul>
                         <li><button data-panelid="microep"><h4><i class="fas fa-chevron-right"></i> M.S. Microelectronics-Photonics</h4> </button> 
-                        <div id="microep">
+                        <div id="microep" class="resume-content">
                             <p>
                                 I graduated with a Master of Science degree from the Microelectronics-Photonics 
                                 program from the University of Arkansas in Fayetteville, in the spring of 2016. My thesis
@@ -38,49 +60,42 @@
                                 was Prof. Ryan Tian. My final GPA was a 3.8.
                             </p>
                             <p>
-                                    This engineering program is an interdisciplinary graduate school which takes students from
-                                    electrical engineering, physics, and materials science/chemistry. The program focuses on 
-                                    semiconductor device physics & manufacturing, electrical engineering, as well as on business administration and 
-                                    management setting the students up for leadership positions and even entrepreneurship. Engineering coursework examples:
-                                   <section class="block">
-                                    <section class="block1">
-                                       <ul>
-                                        <li><h4>Engineering:</h4> </li>
+                                    This interdisciplinary engineering program draws students from electrical engineering, physics, and materials science/chemistry backgrounds. The curriculum focuses on semiconductor device physics & manufacturing, electrical engineering, business administration and management - preparing students for leadership positions and entrepreneurship opportunities.
+                            </p>
+                            <p><strong>Key coursework areas:</strong></p>
+                            <section class="block">
+                                <section class="block1">
+                                    <h4>Engineering</h4>
+                                    <ul>
                                         <li>Microelectronic Fabrication</li>
                                         <li>Semiconductor devices</li>
                                         <li>Integrated Circuit Fabrication</li>
                                         <li>Programming in C</li>
                                         <li>Engineering Materials</li>
                                     </ul> 
-                                    </section>
-                                    <section class="block2">
-                                       <ul>
-                                        <li><h4>Business Management:</h4> </li>
-                                        <li>Operations Seminar Courses: (Infrastructure, Personal Management,
-                                             Management/Leadership)
-                                        </li>
+                                </section>
+                                <section class="block2">
+                                    <h4>Business Management</h4>
+                                    <ul>
+                                        <li>Operations Seminar Courses (Infrastructure, Personal Management, Management/Leadership)</li>
                                         <li>Commercialization of Research</li>
                                         <li>Proposal Writing and Management</li>
                                         <li>Engineering and Science Ethics</li>
                                     </ul> 
-                                    </section>
-                                   </section>
-                            </p>
+                                </section>
+                            </section>
                         </div>
                         </li>
                         <li><button data-panelid="biochem"><h4><i class="fas fa-chevron-right"></i> B.S. Chemistry</h4> </button> 
-                        <div id="biochem">
+                        <div id="biochem" class="resume-content">
                             <p>
-                              I obtained a Bachelor of Science degree in Chemistry with a concentration in Biochemistry from the University of Arkansas in Fayetteville
-                            in the spring of 2014. This degree equipped me with the principles and foundations of 
-                            materials science and biology that allows me to thrive in biotechnology/bioinformatics. Due to the amount of mathematics courses that I 
-                            took, I was qualified for a math minor. Science coursework examples:  
+                              I obtained a Bachelor of Science degree in Chemistry with a concentration in Biochemistry from the University of Arkansas in Fayetteville in spring 2014. This degree provided me with strong foundations in materials science and biology, positioning me well for biotechnology and bioinformatics work. Due to extensive mathematics coursework, I qualified for a math minor.
                             </p>
-                            
+                            <p><strong>Key coursework areas:</strong></p>
                             <section class="block">
-                                    <section class="block1">
-                                       <ul>
-                                        <li><h4>Materials Science:</h4> </li>
+                                <section class="block1">
+                                    <h4>Materials Science</h4>
+                                    <ul>
                                         <li>Advanced Nanomaterials Chemistry</li>
                                         <li>Catalysis</li>
                                         <li>Materials Chemistry</li>
@@ -88,10 +103,10 @@
                                         <li>Advanced Inorganic Chemistry</li>
                                         <li>Physical Chemistry</li>
                                     </ul> 
-                                    </section>
-                                    <section class="block2">
-                                       <ul>
-                                        <li><h4>Biology/Biochemistry:</h4> </li>
+                                </section>
+                                <section class="block2">
+                                    <h4>Biology/Biochemistry</h4>
+                                    <ul>
                                         <li>Biochemistry I & II</li>
                                         <li>General Microbiology</li>
                                         <li>Cell Biology</li>
@@ -99,8 +114,7 @@
                                         <li>Genetics</li>
                                         <li>Analytical Chemistry</li>
                                     </ul> 
-                                    </section>
-                                 
+                                </section>
                             </section>
                         </div>
                         </li>
@@ -408,25 +422,7 @@
                     </ul>
                 </div>
             </li>
-                <li><button data-panelid="current"><h2><i class="fas fa-chevron-right"></i> Current Projects</h2> </button>
-                <div id="current">
-                    <p>
-                        Check out my current projects section <a href="more.html">here</a> where I go over some of my recent 
-                        work at Magic Leap. 
-                    </p>
-                    <p>
-                        My past projects mostly involved my grad school work, here is a list of my meeting
-                        presentations:
-                        <br>
-                     <br>   Tyler Chism, Garrett Torix, Ryan Tian “Exploring New Physics in Photon-Photoelectron Interactions on Micropatterned, Zinc Oxide Hyper-Branched Nanorods”, American Chemical society regional meeting, November 4th, 2015, Memphis, TN. 
-                     <br>
-                     <br>   Tyler Chism; Huajun Zhou; Z. Ryan Tian “ZnO Nanostructures' new behavior in harvesting and converting solar-energy”, 2014 ASSET Initiative Annual Conference, September 4th, 2014, Little Rock, AR.
-                     <br>
-                     <br>   H. J. Zhou, T. F. Chism, X. D. Yang, Z. R. Tian, “Structure and function oriented multistep nanosynthesis of arrayed hierarchical tree-like wide light-incidence-angle photocatalysts,” NSF EPSCoR Annual Meeting, Little Rock, AR, September 4th, 2014.
-
-                    </p>
-                </div>
-            </li>    
+    
                 <li><button data-panelid="references"><h2><i class="fas fa-chevron-right"></i> References</h2> </button>
                 <div id="references">
                     <p>
@@ -438,24 +434,30 @@
             </li>
             </ul>
         </section>
-        <footer>
-            <!--footer will have three sections the top having 
-            address phone and email, all with symbols
-        the middle will have a large section with an about me 
-    as well as a search bar and link to github, the very bottom
-will be a footer that contains minimal info-->
-            <h1>Connect with me</h1>
-            <div class="media">
-                <ul>
-                    <li><a href="https://github.com/tylerchism"><i class="fab fa-github-square fa-3x"></i></a> </li>
-                    <li><a href="https://www.linkedin.com/in/tyler-chism-a76b6891/"><i class="fab fa-linkedin fa-3x"></i></a> </li>
-                    <li><a href="https://www.goodreads.com/user/show/12498217-tyler-chism"><i class="fab fa-goodreads fa-3x"></i></a></li>
-                </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h2>Connect with me</h2>
+                <div class="social-links">
+                    <a href="https://github.com/tylerchism" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/tyler-chism-a76b6891/" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.goodreads.com/user/show/12498217-tyler-chism" class="social-link" aria-label="Goodreads">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                </div>
             </div>
-        </footer>
+            <p>&copy; 2025 Tyler Chism. Built with curiosity and code.</p>
+        </div>
+    </footer>
+
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="../JS/main.js"></script>
-    
-  
-    </body>
+</body>
 </html>

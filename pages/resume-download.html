@@ -1,61 +1,96 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Chism, Tyler - Resume</title>
-        <link rel="stylesheet" href="../styles.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-        <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
-    </head>
-    <body>
-        <header class="iresume">
-            <nav>
-                <div class="very-top">
-                        <a href="tel:870.321.5816"><i class="fas fa-phone"></i> 870.321.5816</a>
-                        <a href="mailto:tchism4@gmail.com"><i class="fas fa-envelope-square"></i> tchism4@gmail.com</a>
-                </div>
-                <div id="navbar" class="ir scrolled">
-                  <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="interactive-resume.html">Interactive Resume</a></li>
-                    <li><a href="resume-download.html">Resume Download</a></li>
-                    <li><a href="more.html">More</a></li>
-                </ul>  
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler Chism - Resume Download</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Tyler Chism</a>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="interactive-resume.html" class="nav-link">Resume</a>
+                <a href="manifesting.html" class="nav-link">Manifesting</a>
+                <a href="more.html" class="nav-link">More</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="resume-header">
+        <div class="container">
+            <div class="resume-intro">
+                <h1>Resume Download</h1>
+                <p>Download my resume in PDF or Word format for your convenience.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Download Section -->
+    <div class="container">
+        <section class="download-modern">
+            <div class="download-cards">
+                <div class="download-card">
+                    <div class="download-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>PDF Format</h3>
+                    <p>Download my resume in PDF format for easy viewing and printing.</p>
+                    <a href="chism-resume.pdf" download class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Download PDF
+                    </a>
                 </div>
                 
-            </nav>
-        </header>
-        <section class="download">
-            <figure>
-                <a href="chism-resume.pdf" download>
-                    <img src="../images/resume.png" alt="resume">
-                    <figcaption>Download PDF</figcaption>
-                </a>
-            </figure>
-            <figure>
-                <a href="chism-resume.docx" download>
-                    <img src="../images/resume.png" alt="resume">
-                    <figcaption>Download docx</figcaption>
-                </a>
-            </figure>
-        </section>
-        <footer>
-            <!--footer will have three sections the top having 
-            address phone and email, all with symbols
-        the middle will have a large section with an about me 
-    as well as a search bar and link to github, the very bottom
-will be a footer that contains minimal info-->
-            <h1>Connect with me</h1>
-            <div class="media">
-                <ul>
-                    <li><a href="https://github.com/tylerchism"><i class="fab fa-github-square fa-3x"></i></a> </li>
-                    <li><a href="https://www.linkedin.com/in/tyler-chism-a76b6891/"><i class="fab fa-linkedin fa-3x"></i></a> </li>
-                    <li><a href="https://www.goodreads.com/user/show/12498217-tyler-chism"><i class="fab fa-goodreads fa-3x"></i></a></li>
-                </ul>
+                <div class="download-card">
+                    <div class="download-icon">
+                        <i class="fas fa-file-word"></i>
+                    </div>
+                    <h3>Word Format</h3>
+                    <p>Download my resume in Word format for easy editing and customization.</p>
+                    <a href="chism-resume.docx" download class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Download DOCX
+                    </a>
+                </div>
             </div>
-        </footer>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h2>Connect with me</h2>
+                <div class="social-links">
+                    <a href="https://github.com/tylerchism" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/tyler-chism-a76b6891/" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.goodreads.com/user/show/12498217-tyler-chism" class="social-link" aria-label="Goodreads">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                </div>
+            </div>
+            <p>&copy; 2025 Tyler Chism. Built with curiosity and code.</p>
+        </div>
+    </footer>
+
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="../JS/main.js"></script>
-    
-  
-    </body>
+</body>
 </html>

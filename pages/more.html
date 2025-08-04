@@ -1,153 +1,144 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Chism, Tyler - Resume</title>
-        <link rel="stylesheet" href="../styles.css">
-        <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-        <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
-    </head>
-    <body>
-        <header class="more">
-            <nav>
-                <div class="very-top">
-                        <a href="tel:870.321.5816"><i class="fas fa-phone"></i> 870.321.5816</a>
-                        <a href="mailto:tchism4@gmail.com"><i class="fas fa-envelope-square"></i> tchism4@gmail.com</a>
-                </div>
-                <div id="navbar" class="scrolled">
-                  <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="interactive-resume.html">Interactive Resume</a></li>
-                    <li><a href="resume-download.html">Resume Download</a></li>
-                    <li><a href="more.html">More</a></li>
-                </ul>  
-                </div>
-                
-            </nav>
-        </header>
-        <section id="moresection" class="more">
-            <div class="more">
-            <h1>Projects</h1>
-            <img src="../images/code2.jpeg" alt="code">
-            <h3>GUI for AR Data Collection (04/2021 - Present)</h3>
-            <p>
-                 
-                Created GUI for data collection at magic leap. GUI interfaced with motion tracking software as well as AR device API to assist users in collecting data with the device and managing meta data and uploading to the cloud. 
-                
-            </p>
-            <p> 
-                Used OOP in python along with Kivy framework to create the multi- platform application.
-            </p>
-
-            <h3>Rapid Prototyping for Robotic Collection (08/2020 - 08/2020) </h3>
-            <p>
-             
-                Used Arduino servo with 80/20 bar and pulley components to quickly build a robotic track system for special image capture data collection request.            
-            </p>
-            <p> 
-                Created script using python and Arduino to automate collection with track setup.
-            </p>
-
-            <h3>Data Conversion Pipeline (11/2020 - Present) </h3>
-            <p>
-             
-                Develop and maintain Dockerfile and python scripts for a data post- processing job that runs on the cloud as a runtime job.            
-            </p>
-            <p> 
-                Conversion job uses Ubuntu image along with OOP python scripts to convert raw data from AR device sensors as well as motion capture cameras into data format that is consumed by computer vision customers.
-            </p>
-
-            <h3> <a href="https://github.com/tylerchism/potcon_app">Automated Point Cloud Rendering</a> (09/2020 - 10/2020)</h3>
-            <p>
-             
-                Use open source point cloud renderer Potree along with nodejs, npm, and docker to make a dockerized Ubuntu that converts native point cloud data from lidar into a format that Potree can use.            
-            </p>
-            <p> 
-                Docker image will automatically convert files then create webpage that can be viewed locally on a web browser using the Potree application.
-            </p>
-
-            <h3>Multiple Ground Truth Mapping (05/2021 - Present)</h3>
-            <p>
-             
-                Use total station and survey equipment to provide third layer of ground truth data to spatial computing device            
-            </p>
-            <p> 
-                Make CAD designs and use hardware and tools to manufacture targets that can tie together motion capture ground truth tracking data with Lidar and total station ground truth sources.            </p>
-            </p>
-
-            <h3>Zinc Oxide Photo-Detector (Thesis Work)</h3>
-            <p>
-             
-                Used physical vapor deposition, soldering, hydrothermal nano-synthesis, and custom photo-detection experimental setup to collect and analyze data for thesis work on the optical properties of zinc oxide nanostructures.            
-            </p>
-            <p> 
-                The resulting thesis can be found <a href="https://pdfs.semanticscholar.org/a64d/9f7109d54835be274bd07423558d835d6d50.pdf">here</a>. Unfortunately, my knowledge of optics was not advanced enough during this work to further the work and reach any meaningful conclusions although the data and underlying findings are still valuable.            </p>
-
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyler Chism - Projects & More</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <script src="https://kit.fontawesome.com/07951e7ccc.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Tyler Chism</a>
             </div>
-            <div class="more">
-           
-            <img id="vert" src="../images/about.jpeg" alt="river">
-             <h1>About Me</h1>
-            <p id="about">
-                I am constantly in pursuit of knowledge. I'm happy as long as
-                as I never stop learning. My second most notable feature is that
-                I'm diligent about getting to the root of issues and doing things
-                the right way. I don't consider myself a master of a concept 
-                until I grasp the underlying principle of it. This has led me
-                to excel in a wide range of STEM subjects without having to 
-                limit myself to one narrow field.
-            </p>
-            <p>
-                My goal in life is to be a producer instead of a consumer. I
-                want to use my STEM field knowledge to create solutions and deliver
-                these solutions to the world so as to advance society as much
-                as possible. I know that a strong work ethic along with an advanced
-                skillset will go a long way, but communication and teamwork are a 
-                very vital component to being successful and contributing to society.
-                For this reason, I not only engage in self-study for science related
-                disciplines but also for being a better communicator and colleague.
-            </p>
+            <div class="nav-menu" id="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="interactive-resume.html" class="nav-link">Resume</a>
+                <a href="manifesting.html" class="nav-link">Manifesting</a>
+                <a href="more.html" class="nav-link">More</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
-        <div class="more">
-            <h1>Home Life</h1>
-            <img src="../images/lakesunset.jpg" alt="lake sunset">
-            <p id="home">
-                I'm very enthusiastic about spending time with friends and family. Most of my favorite activities lead me outdoors, but occasionally I enjoy staying in to play 
-                strategy-based board games.
-                I grew up hunting public land and as such have taken a great interest in conservation. So, I spend a lot of time listening to podcasts
-                and learning about conservation, the environment, evoltionary biology, anthropology, history, and other related topics so as to be better educated on 
-                ways in which humans can live more sustainably.
-            </p>
-            <p>
-                I also consider health and fitness to be one of my top priorities and so I also spend a great deal of time reading, and listenting to podcasts 
-                about nutrition, physical fitness, medicine, and more. This interest lead me to get certified as a biomechanics specialist.
-                This interest also lead me to get a degree in Biochemistry, although now I find that I am much more 
-                interested in optics, physics, AI, and other new technologies.
-            </p>
-            <p>
-                Feel free to hop over to my <a href="https://www.goodreads.com/user/show/12498217-tyler-chism">Goodreads profile</a>  to get an
-                idea of my reading interests and book recomendations. And don't
-                forget to check back in here as I'll be adding more to keep you up to date on my projects.
-            </p>
+    </nav>
+
+    <!-- Header Section -->
+    <section class="resume-header">
+        <div class="container">
+            <div class="resume-intro">
+                <h1>Projects & More</h1>
+                <p>Current projects, research interests, and thoughts on technology and life.</p>
+            </div>
         </div>
+    </section>
+
+    <!-- Current Interests Section -->
+    <div class="container">
+        <section class="current-interests">
+            <h2 class="section-title">Current Explorations</h2>
+            <div class="interests-grid">
+                <div class="interest-card">
+                    <div class="interest-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Manifestation Framework</h3>
+                    <p>An interactive exploration of consciousness, visualization, and personal transformation through systematic practice.</p>
+                    <a href="manifesting.html" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i>
+                        Explore Framework
+                    </a>
+                </div>
+                
+                <div class="interest-card">
+                    <div class="interest-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Consciousness Studies</h3>
+                    <p>Researching the intersection of neuroscience, quantum physics, and awareness. Exploring how consciousness shapes reality.</p>
+                </div>
+                
+                <div class="interest-card">
+                    <div class="interest-icon">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3>Systems Thinking</h3>
+                    <p>Understanding complex systems and finding unifying principles that explain multiple paradigms across disciplines.</p>
+                </div>
+            </div>
         </section>
-        <footer>
-            <!--footer will have three sections the top having 
-            address phone and email, all with symbols
-        the middle will have a large section with an about me 
-    as well as a search bar and link to github, the very bottom
-will be a footer that contains minimal info-->
-            <h1>Connect with me</h1>
-            <div class="media">
-                <ul>
-                    <li><a href="https://github.com/tylerchism"><i class="fab fa-github-square fa-3x"></i></a> </li>
-                    <li><a href="https://www.linkedin.com/in/tyler-chism-a76b6891/"><i class="fab fa-linkedin fa-3x"></i></a> </li>
-                    <li><a href="https://www.goodreads.com/user/show/12498217-tyler-chism"><i class="fab fa-goodreads fa-3x"></i></a></li>
-                </ul>
+
+        <!-- About Me Section -->
+        <section id="about" class="about-section">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Me</h2>
+                    <p>
+                        I'm constantly in pursuit of knowledge and happiest when learning something new. I'm diligent about getting to the root of issues and doing things the right way - I don't consider myself competent in a concept until I grasp its underlying principles.
+                    </p>
+                    <p>
+                        This approach has allowed me to excel across a wide range of STEM disciplines without limiting myself to one narrow field. My goal is to be a producer rather than a consumer, using my knowledge to create solutions that advance society.
+                    </p>
+                    <p>
+                        I believe that while technical skills and work ethic are crucial, communication and teamwork are vital components of success. That's why I invest in developing not just my scientific knowledge, but also my abilities as a communicator and colleague.
+                    </p>
+                </div>
+                <div class="about-visual">
+                    <img src="../images/about.jpeg" alt="About me" class="about-image">
+                </div>
             </div>
-        </footer>
+        </section>
+
+        <!-- Home Life Section -->
+        <section id="home" class="home-section">
+            <div class="home-content">
+                <div class="home-visual">
+                    <img src="../images/riverview2.jpg" alt="Buffalo River view" class="home-image">
+                </div>
+                <div class="home-text">
+                    <h2>Home Life</h2>
+                    <p>
+                        Home is about an hour from Fayetteville in Huntsville, AR, where the Buffalo National River flows right through our property. This spring-fed river maintains a perfect 58 degrees year-round, and our 25 acres of beautiful hardwood trees provide the perfect natural sanctuary.
+                    </p>
+                    <p>
+                        I'm passionate about conservation and sustainability, spending time learning about environmental stewardship, evolutionary biology, and how humans can live more harmoniously with nature. Most of my favorite activities take me outdoors, though I also enjoy strategy-based games and deep conversations.
+                    </p>
+                    <p>
+                        Health and fitness are top priorities - I'm certified as a biomechanics specialist and continuously study nutrition, physical fitness, and human optimization. Future plans for our land include expanding off-grid capabilities, creating meditation spaces, and developing it as a sustainable retreat that embodies these values.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h2>Connect with me</h2>
+                <div class="social-links">
+                    <a href="https://github.com/tylerchism" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/tyler-chism-a76b6891/" class="social-link" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.goodreads.com/user/show/12498217-tyler-chism" class="social-link" aria-label="Goodreads">
+                        <i class="fab fa-goodreads"></i>
+                    </a>
+                </div>
+            </div>
+            <p>&copy; 2025 Tyler Chism. Built with curiosity and code.</p>
+        </div>
+    </footer>
+
     <script src="../JS/jquery-3.4.1.min.js"></script>
     <script src="../JS/main.js"></script>
-    
-  
-    </body>
+</body>
 </html>
