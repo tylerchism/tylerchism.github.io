@@ -1011,3 +1011,78 @@ i.rotate90 {
 html {
     scroll-padding-top: 4rem;
 }
+
+/* ============================================================
+   About Section — Pretext Magazine Layout
+   ============================================================ */
+
+.about-pretext-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-pretext-heading {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--space-8);
+}
+
+.about-pretext-body {
+    position: relative;
+    min-height: 220px;
+}
+
+.about-pretext-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-shadow: 0 8px 32px rgba(59,130,246,0.18), 0 2px 8px rgba(0,0,0,0.10);
+    border: 4px solid white;
+    z-index: 1;
+}
+
+.about-pretext-lines {
+    position: relative;
+}
+
+.pretext-line {
+    position: absolute;
+    white-space: nowrap;
+    color: var(--gray-600);
+    font-size: 17px;
+    line-height: 28px;
+    font-family: var(--font-family-primary);
+}
+
+/* Mobile: stack image above text */
+@media (max-width: 600px) {
+    .about-pretext-img {
+        width: 120px;
+        height: 120px;
+        position: static;
+        display: block;
+        margin: 0 auto var(--space-6);
+    }
+
+    .about-pretext-body {
+        min-height: unset;
+    }
+
+    .pretext-line {
+        position: static !important;
+        display: block;
+        top: auto !important;
+        white-space: normal;
+        width: auto !important;
+    }
+
+    .about-pretext-lines {
+        height: auto !important;
+    }
+}

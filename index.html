@@ -119,45 +119,32 @@
         </div>
     </section>
 
-    <!-- About Section -->
+    <!-- About Section — Pretext magazine-style circular text wrap POC -->
     <section class="about">
         <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>About Me</h2>
-                    <p>
-                        I'm a fundamentalist by nature, constantly seeking unifying theories that 
-                        explain and account for multiple paradigms. In practice, I'm an engineer 
-                        who loves solving problems by getting hands dirty and putting in the work 
-                        to create meaningful solutions.
-                    </p>
-                    <p>
-                        I value emotional intelligence, curiosity, strong work ethic, and the 
-                        motivation to continually grow and improve. Each day I work to enhance 
-                        both my communication and technical skills while prioritizing mental 
-                        and physical health.
-                    </p>
-                    <div class="core-values">
-                        <div class="value-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Emotional Intelligence</span>
-                        </div>
-                        <div class="value-item">
-                            <i class="fas fa-book-open"></i>
-                            <span>Continuous Learning</span>
-                        </div>
-                        <div class="value-item">
-                            <i class="fas fa-tools"></i>
-                            <span>Problem Solving</span>
-                        </div>
-                        <div class="value-item">
-                            <i class="fas fa-seedling"></i>
-                            <span>Personal Growth</span>
-                        </div>
-                    </div>
+            <div class="about-pretext-wrap">
+                <h2 class="about-pretext-heading">About Me</h2>
+                <div class="about-pretext-body" id="about-pretext-body">
+                    <img id="about-pretext-img" src="images/me.jpeg" alt="Tyler Chism" class="about-pretext-img">
+                    <div id="about-pretext-lines" class="about-pretext-lines"></div>
                 </div>
-                <div class="about-visual">
-                    <img src="images/eq2.jpg" alt="EQ Assessment" class="about-image">
+                <div class="core-values" style="margin-top: 2rem;">
+                    <div class="value-item">
+                        <i class="fas fa-heart"></i>
+                        <span>Emotional Intelligence</span>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-book-open"></i>
+                        <span>Continuous Learning</span>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-tools"></i>
+                        <span>Problem Solving</span>
+                    </div>
+                    <div class="value-item">
+                        <i class="fas fa-seedling"></i>
+                        <span>Personal Growth</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -198,5 +185,6 @@
 
     <script src="JS/jquery-3.4.1.min.js?v=2.0"></script>
     <script src="JS/main.js?v=2.0"></script>
+    <script type="module" src="JS/pretext-about.js"></script>
 </body>
 </html>
