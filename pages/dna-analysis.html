@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tyler Chism — Personal DNA Health Analysis</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f172a;
+    --card:      #1e293b;
+    --card2:     #273548;
+    --border:    #334155;
+    --text:      #e2e8f0;
+    --muted:     #94a3b8;
+    --red:       #ef4444;
+    --red-dim:   rgba(239,68,68,0.15);
+    --orange:    #f97316;
+    --orange-dim:rgba(249,115,22,0.15);
+    --yellow:    #eab308;
+    --yellow-dim:rgba(234,179,8,0.15);
+    --green:     #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --blue:      #3b82f6;
+    --blue-dim:  rgba(59,130,246,0.15);
+    --mono: "Courier New", Courier, "Lucida Console", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  #progress-bar {
+    position: fixed; bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), #8b5cf6);
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    z-index: 100;
+  }
+
+  /* ===== SLIDE COUNTER ===== */
+  #slide-counter {
+    position: fixed; top: max(18px, env(safe-area-inset-top, 0px)); right: 22px;
+    font-size: 13px; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .05em;
+    z-index: 100;
+    background: rgba(15,23,42,0.7);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+  }
+
+  /* ===== NAV ARROWS ===== */
+  .nav-btn {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    background: rgba(30,41,59,0.8);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    transition: all .2s;
+    backdrop-filter: blur(4px);
+  }
+  .nav-btn:hover { background: var(--card2); color: var(--text); border-color: var(--blue); }
+  #nav-prev { left: 14px; }
+  #nav-next { right: 14px; }
+
+  /* ===== SLIDE DECK ===== */
+  #deck {
+    width: 100%; height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 70px 50px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s cubic-bezier(.4,0,.2,1), transform 0.45s cubic-bezier(.4,0,.2,1);
+    transform: translateX(30px);
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  .slide-inner {
+    width: 100%; max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  .slide-title {
+    font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-subtitle {
+    font-size: clamp(.85rem, 1.8vw, 1.05rem);
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  .slide-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--blue);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue) 0%, transparent 100%);
+    margin-bottom: 24px;
+    opacity: .5;
+  }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em;
+    white-space: nowrap;
+  }
+  .badge-red    { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(239,68,68,.3); }
+  .badge-orange { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(249,115,22,.3); }
+  .badge-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234,179,8,.3); }
+  .badge-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(34,197,94,.3); }
+  .badge-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(59,130,246,.3); }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .card-red    { border-left: 3px solid var(--red); }
+  .card-orange { border-left: 3px solid var(--orange); }
+  .card-yellow { border-left: 3px solid var(--yellow); }
+  .card-green  { border-left: 3px solid var(--green); }
+  .card-blue   { border-left: 3px solid var(--blue); }
+
+  /* ===== TABLE ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: clamp(.78rem, 1.4vw, .9rem);
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(51,65,85,.5);
+    transition: background .15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,.025); }
+  td {
+    padding: 10px 12px;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+
+  /* ===== GENE MONO ===== */
+  .gene {
+    font-family: var(--mono);
+    font-size: .85em;
+    color: #93c5fd;
+    background: rgba(59,130,246,.1);
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ===== GATE LIST ===== */
+  .gate-list { list-style: none; }
+  .gate-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-size: clamp(.8rem, 1.5vw, .9rem);
+  }
+  .gate-num {
+    min-width: 22px; height: 22px;
+    background: var(--red);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    color: #fff; flex-shrink: 0; margin-top: 1px;
+  }
+  .gate-num.ok { background: var(--green); }
+  .gate-text { flex: 1; }
+  .gate-text strong { color: var(--text); }
+  .gate-text .gene-inline { font-family: var(--mono); font-size: .82em; color: #93c5fd; }
+
+  /* ===== SUPPLEMENT LIST ===== */
+  .supp-list { list-style: none; }
+  .supp-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-size: clamp(.8rem, 1.5vw, .88rem);
+    line-height: 1.4;
+  }
+  .supp-icon { font-size: 1rem; min-width: 20px; text-align: center; margin-top: 1px; }
+
+  /* ===== AVOID BOX ===== */
+  .avoid-box {
+    background: var(--red-dim);
+    border: 1px solid rgba(239,68,68,.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: .88rem;
+  }
+  .avoid-box strong { color: var(--red); }
+
+  /* ===== CALLOUT ===== */
+  .callout {
+    background: var(--card2);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-size: .88rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .callout.red-callout { border-left-color: var(--red); color: #fca5a5; background: var(--red-dim); font-style: normal; }
+
+  /* ===== TITLE SLIDE ===== */
+  .title-slide { text-align: center; }
+  .title-hero {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #e2e8f0 0%, #60a5fa 50%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .title-sub {
+    font-size: clamp(.9rem, 2vw, 1.2rem);
+    color: var(--muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .title-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    margin-top: 28px;
+  }
+  .title-tag {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .dna-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ===== STAT BOXES ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 700;
+    color: var(--blue);
+    font-variant-numeric: tabular-nums;
+    font-family: var(--mono);
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-top: 4px;
+  }
+
+  /* ===== CHECK / X LIST ===== */
+  .check-list { list-style: none; }
+  .check-list li {
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(51,65,85,.4);
+    font-size: clamp(.8rem, 1.5vw, .9rem);
+    display: flex; align-items: flex-start; gap: 10px;
+    line-height: 1.4;
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-icon { min-width: 20px; text-align: center; }
+
+  /* ===== TWO-COL ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 680px) {
+    .two-col { grid-template-columns: 1fr; }
+    .slide {
+      padding: calc(56px + env(safe-area-inset-top, 0px)) 20px calc(28px + env(safe-area-inset-bottom, 0px));
+    }
+    .nav-btn { display: none; }
+    #overview { padding: calc(24px + env(safe-area-inset-top, 0px)) 16px 24px; }
+  }
+
+  /* ===== SECTION HEADER ===== */
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .section-header .badge { flex-shrink: 0; }
+
+  /* ===== ACTION LIST ===== */
+  .action-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .action-block h4 {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .action-block ol, .action-block ul {
+    padding-left: 20px;
+    font-size: clamp(.8rem, 1.5vw, .9rem);
+    line-height: 1.8;
+  }
+  .action-block ol li::marker { color: var(--blue); font-weight: 700; }
+  .action-block ul { list-style: none; padding-left: 0; }
+  .action-block ul li { padding: 3px 0; }
+
+  /* ===== OVERVIEW GRID ===== */
+  #overview {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 40px 30px;
+  }
+  #overview.active { display: block; }
+  #overview h2 {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .overview-thumb {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .overview-thumb:hover, .overview-thumb.active-thumb {
+    border-color: var(--blue);
+    background: var(--card2);
+  }
+  .overview-thumb .thumb-num {
+    font-size: 10px;
+    color: var(--blue);
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+  }
+  .overview-thumb .thumb-title {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .overview-thumb .thumb-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+  #overview-close {
+    position: fixed; top: 20px; right: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    z-index: 201;
+    transition: all .2s;
+  }
+  #overview-close:hover { border-color: var(--blue); color: var(--text); }
+
+  /* ===== KEYBOARD HINT ===== */
+  #kb-hint {
+    position: fixed; bottom: 18px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(148,163,184,.4);
+    letter-spacing: .05em;
+    z-index: 100;
+    pointer-events: none;
+    transition: opacity 1s;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  .slide::-webkit-scrollbar { width: 4px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ===== ACCENT LINE ===== */
+  .accent-line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue) 0%, #8b5cf6 50%, transparent 100%);
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* Inline emphasis colors */
+  .c-red    { color: var(--red); }
+  .c-orange { color: var(--orange); }
+  .c-yellow { color: var(--yellow); }
+  .c-green  { color: var(--green); }
+  .c-blue   { color: var(--blue); }
+  .c-muted  { color: var(--muted); }
+  .fw7 { font-weight: 700; }
+
+  /* Wide table helper */
+  .table-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Slide Counter -->
+<div id="slide-counter">1 / 18</div>
+
+<!-- Nav Buttons -->
+<button class="nav-btn" id="nav-prev" aria-label="Previous">&#8592;</button>
+<button class="nav-btn" id="nav-next" aria-label="Next">&#8594;</button>
+
+<!-- Keyboard Hint -->
+<div id="kb-hint">← → Space to navigate &nbsp;|&nbsp; O for overview &nbsp;|&nbsp; F for fullscreen</div>
+
+<!-- ============================= OVERVIEW ============================= -->
+<div id="overview">
+  <button id="overview-close">✕ Close Overview</button>
+  <h2>All Slides — Click to Jump</h2>
+  <div class="overview-grid" id="overview-grid"></div>
+</div>
+
+<!-- ============================= DECK ============================= -->
+<div id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" data-title="Title" data-sub="DNA Health Analysis">
+    <div class="dna-glow"></div>
+    <div class="slide-inner title-slide">
+      <div class="slide-eyebrow">Personal Genomics Report</div>
+      <div class="title-hero">Tyler Chism<br>DNA Health Analysis</div>
+      <div class="title-sub">
+        Ancestry V2.0 Genotype Array &nbsp;|&nbsp; Trio Analysis with Mom &amp; Dad &nbsp;|&nbsp; v4 Report
+      </div>
+      <div class="title-sub" style="margin-top:4px; font-size:.9rem;">
+        <span class="gene">319,389</span> annotated variants &nbsp;&middot;&nbsp;
+        ClinVar &nbsp;+&nbsp; PharmGKB &nbsp;+&nbsp; SIFT &nbsp;+&nbsp; PolyPhen-2
+      </div>
+      <div class="title-tags">
+        <span class="title-tag">🧬 677,055 SNPs phased</span>
+        <span class="title-tag">👨‍👩‍👦 Trio verified 99.99%</span>
+        <span class="title-tag">💊 PharmGKB 431 hits</span>
+        <span class="title-tag">📋 ClinVar 7,819 hits</span>
+        <span class="title-tag">⚗️ BEAGLE 5.5 haplotypes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Big Picture -->
+  <div class="slide" data-title="The Big Picture" data-sub="Top Priority Findings">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Executive Summary</div>
+      <div class="slide-title">The Big Picture</div>
+      <div class="slide-subtitle">Top priority findings across the full report</div>
+      <div class="divider"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Finding</th>
+              <th>Zygosity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-red">🔴 HIGH</span></td>
+              <td><span class="gene">MTHFR</span> C677T — ~70% enzyme reduction</td>
+              <td><span class="c-red fw7">Homozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">🔴 HIGH</span></td>
+              <td><span class="gene">MTRR</span> Ile22Met — B12 regeneration impaired</td>
+              <td><span class="c-red fw7">Homozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">🔴 HIGH</span></td>
+              <td><span class="gene">DPYD</span> — Fluorouracil chemotherapy toxicity risk</td>
+              <td><span class="c-orange fw7">Heterozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-red">🔴 HIGH</span></td>
+              <td><span class="gene">ATG16L1</span> double-hom — autophagy severely impaired</td>
+              <td><span class="c-red fw7">Likely Hom (both)</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-orange">🟠 MOD-HIGH</span></td>
+              <td><span class="gene">VKORC1</span> + <span class="gene">CYP4F2</span> — warfarin unusual sensitivity</td>
+              <td><span class="c-red fw7">Both Hom</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-orange">🟠 MOD-HIGH</span></td>
+              <td><span class="gene">CYP2C19</span> gain-of-function — clopidogrel bleeding risk</td>
+              <td><span class="c-orange fw7">Heterozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-yellow">🟡 MOD</span></td>
+              <td><span class="gene">BHMT</span> Arg239Gln — backup methylation impaired</td>
+              <td><span class="c-orange fw7">Homozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-yellow">🟡 MOD</span></td>
+              <td><span class="gene">PNPLA3</span> — NAFLD risk factor</td>
+              <td><span class="c-orange fw7">Heterozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-green">🟢 GOOD</span></td>
+              <td><span class="gene">LRP5</span> Worth disease — high bone density (gain-of-function)</td>
+              <td><span class="c-green fw7">Homozygous</span></td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-green">🟢 CLEAR</span></td>
+              <td><span class="gene">BRCA1/2</span>, <span class="gene">PALB2</span>, <span class="gene">ATM</span>, <span class="gene">CHEK2</span> — hereditary cancer genes clear</td>
+              <td><span class="c-green fw7">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Data Quality -->
+  <div class="slide" data-title="Data Quality" data-sub="Platform & Annotation Stack">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Technical Foundation</div>
+      <div class="slide-title">Data Quality</div>
+      <div class="slide-subtitle">Platform, trio validation, and annotation pipeline</div>
+      <div class="divider"></div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-num">~700K</div>
+          <div class="stat-label">SNPs on array</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">99.99%</div>
+          <div class="stat-label">Mendelian consistency</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">7,819</div>
+          <div class="stat-label">ClinVar hits</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">431</div>
+          <div class="stat-label">PharmGKB hits</div>
+        </div>
+      </div>
+      <div class="card card-blue">
+        <h3>Platform</h3>
+        <ul class="check-list">
+          <li><span class="check-icon">🔬</span>Ancestry V2.0 array (~700,000 SNPs, genome build hg19)</li>
+          <li><span class="check-icon">👨‍👩‍👦</span>Trio analysis: Tyler + Mom + Dad — full Mendelian phasing</li>
+          <li><span class="check-icon">✅</span>Mendelian consistency: <span class="gene">677,006 / 677,055</span> SNPs (99.99%)</li>
+          <li><span class="check-icon">🔗</span>Phasing: BEAGLE 5.5 — haplotypes fully resolved</li>
+        </ul>
+      </div>
+      <div class="card card-blue">
+        <h3>Annotation Stack</h3>
+        <ul class="check-list">
+          <li><span class="check-icon c-red">●</span>ClinVar — <span class="gene">7,819</span> variant hits</li>
+          <li><span class="check-icon c-blue">●</span>PharmGKB — <span class="gene">431</span> drug-gene hits</li>
+          <li><span class="check-icon c-yellow">●</span>SIFT — <span class="gene">565</span> deleterious calls</li>
+          <li><span class="check-icon c-orange">●</span>PolyPhen-2 — <span class="gene">7</span> priority damaging variants</li>
+          <li><span class="check-icon c-green">●</span>Sister panel: GX Sciences Pro7 (Christine Dale, Nov 2022) — filled critical array gaps</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Methylation 7-Gate -->
+  <div class="slide" data-title="Methylation System" data-sub="7-Gate Impairment">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Folate / B12 Pathway</div>
+      <div class="slide-title">The Methylation Cascade</div>
+      <div class="slide-subtitle">Impaired at Every Gate — A 7-Point Compound Deficit</div>
+      <div class="divider"></div>
+      <ul class="gate-list">
+        <li>
+          <div class="gate-num">1</div>
+          <div class="gate-text"><strong>Dietary folate intake</strong> — <span class="gene-inline">SLC19A1/RFC1</span> (likely hom) — folate gets in slowly</div>
+        </li>
+        <li>
+          <div class="gate-num">2</div>
+          <div class="gate-text"><strong>Folate activation</strong> — <span class="gene-inline">MTHFS</span> (likely hom) — folate gets "trapped"</div>
+        </li>
+        <li>
+          <div class="gate-num">3</div>
+          <div class="gate-text"><strong>Folate cycling</strong> — <span class="gene-inline">MTHFD1</span> (likely hom) — mitochondrial one-carbon metabolism impaired</div>
+        </li>
+        <li>
+          <div class="gate-num">4</div>
+          <div class="gate-text"><strong>Core methylation</strong> — <span class="gene-inline">MTHFR C677T</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span> — ~70% enzyme reduction</div>
+        </li>
+        <li>
+          <div class="gate-num">5</div>
+          <div class="gate-text"><strong>B12 stomach absorption</strong> — <span class="gene-inline">GIF</span> (likely het) — less B12 extracted from food</div>
+        </li>
+        <li>
+          <div class="gate-num">6</div>
+          <div class="gate-text"><strong>B12 blood transport</strong> — <span class="gene-inline">TCN2</span> (het confirmed) — B12 delivery to cells impaired</div>
+        </li>
+        <li>
+          <div class="gate-num">7</div>
+          <div class="gate-text"><strong>B12 recycling</strong> — <span class="gene-inline">MTRR Ile22Met</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span> — SIFT 0.000 (max deleteriousness)</div>
+        </li>
+      </ul>
+      <div class="card card-orange" style="margin-top:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.1rem;">🔄</span>
+          <div><strong>Backup pathway:</strong> <span class="gene">BHMT</span> Arg239Gln (hom) — backup choline-methionine route also reduced</div>
+        </div>
+      </div>
+      <div class="callout red-callout" style="margin-top:10px;">
+        This is not a single variant issue. Impairment exists at every major gate in the folate/B12 methylation pathway.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Methylation Consequences -->
+  <div class="slide" data-title="Methylation Consequences" data-sub="Downstream of Low SAM">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Biochemical Cascade</div>
+      <div class="slide-title">Downstream Consequences of Low SAM</div>
+      <div class="slide-subtitle">SAM (S-adenosylmethionine) is the universal methyl donor for critical biology</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="card card-blue">
+            <h3 style="color:var(--blue);">SAM Methylates...</h3>
+            <ul class="check-list">
+              <li><span class="check-icon">🧬</span>DNA methylation (gene expression regulation)</li>
+              <li><span class="check-icon">🧠</span>Neurotransmitter synthesis (dopamine, serotonin)</li>
+              <li><span class="check-icon">🔬</span>Phospholipid synthesis (brain membrane health)</li>
+              <li><span class="check-icon">🧹</span>Detoxification pathways (estrogens, toxins)</li>
+              <li><span class="check-icon">⚡</span>Mitochondrial membrane biogenesis</li>
+              <li><span class="check-icon">💊</span>CoQ10 synthesis support</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-red">
+            <h3 style="color:var(--red);">Warning Signs to Watch</h3>
+            <ul class="check-list">
+              <li><span class="check-icon">🔴</span>Elevated homocysteine<br><span class="c-muted" style="font-size:.82em;">Test this — target &lt; 7 µmol/L</span></li>
+              <li><span class="check-icon">🔴</span>Brain fog, mood instability under stress</li>
+              <li><span class="check-icon">🔴</span>Poor methylation of toxins and estrogens</li>
+              <li><span class="check-icon">🔴</span>Impaired DNA repair signaling</li>
+            </ul>
+          </div>
+          <div class="card card-yellow" style="margin-top:0;">
+            <h3 style="color:var(--yellow); font-size:.95rem;">COMT Connection</h3>
+            <p style="font-size:.85rem; color:var(--muted); line-height:1.5;">COMT requires SAM to degrade dopamine. Low SAM = COMT runs slower regardless of genotype → catecholamine buildup under stress.</p>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        "The downstream consequence is chronically suboptimal SAM, elevated homocysteine, and impaired methylation of DNA, proteins, neurotransmitters, and mitochondrial membranes."
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Methylation Protocol -->
+  <div class="slide" data-title="Methylation Protocol" data-sub="The 7-Gate Supplement Stack">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Actionable Protocol</div>
+      <div class="slide-title">The Methylation Protocol — Start Here</div>
+      <div class="slide-subtitle">Immediate actions — no prescription required</div>
+      <div class="divider"></div>
+      <ul class="supp-list">
+        <li>
+          <span class="supp-icon">1️⃣</span>
+          <div><strong class="c-green">L-Methylfolate (5-MTHF)</strong> — bypasses <span class="gene">MTHFR</span>, <span class="gene">MTHFS</span>, <span class="gene">MTHFD1</span> blocks entirely</div>
+        </li>
+        <li>
+          <span class="supp-icon">2️⃣</span>
+          <div><strong class="c-green">Folinic Acid (5-formyl-THF)</strong> — specifically bypasses the <span class="gene">MTHFS</span> "folate trap" — important adjunct</div>
+        </li>
+        <li>
+          <span class="supp-icon">3️⃣</span>
+          <div><strong class="c-green">Sublingual Methylcobalamin</strong> — bypasses <span class="gene">GIF</span> gastric absorption impairment; active form supports <span class="gene">MTRR</span></div>
+        </li>
+        <li>
+          <span class="supp-icon">4️⃣</span>
+          <div><strong class="c-green">Riboflavin / B2</strong> — essential <span class="gene">MTHFR</span> FAD cofactor; 25–50 mg/day. Thermolabile variant responds especially well.</div>
+        </li>
+        <li>
+          <span class="supp-icon">5️⃣</span>
+          <div><strong class="c-green">TMG (Betaine)</strong> — BHMT bypass route; more critical given <span class="gene">BHMT</span> hom SIFT-confirmed impairment; 1–3 g/day</div>
+        </li>
+        <li>
+          <span class="supp-icon">6️⃣</span>
+          <div><strong class="c-green">P5P (active B6)</strong> — CBS/transsulfuration pathway support; lowers homocysteine via alternate route</div>
+        </li>
+        <li>
+          <span class="supp-icon">7️⃣</span>
+          <div><strong class="c-green">Choline (food or supplement)</strong> — PEMT substrate; reduces SAM drain; eggs are an excellent dietary source</div>
+        </li>
+      </ul>
+      <div class="avoid-box">
+        <strong>🚫 AVOID: Folic acid (synthetic)</strong> — accumulates as unmetabolized folic acid (UMFA) due to <span class="gene">MTHFR</span> block. Competes with active forms at receptor sites. Found in fortified foods — read labels.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: PGx Critical Three -->
+  <div class="slide" data-title="Pharmacogenomics" data-sub="The Critical Three">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Pharmacogenomics — URGENT</div>
+      <div class="slide-title">Tell Your Doctors Before Any Treatment</div>
+      <div class="slide-subtitle">Three critical drug interactions that could cause serious harm at standard doses</div>
+      <div class="divider"></div>
+
+      <div class="card card-red">
+        <div class="section-header">
+          <span class="badge badge-red">🔴 CRITICAL</span>
+          <h3 style="margin:0;">Fluorouracil / Capecitabine — Chemotherapy</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">🧬</span>Gene: <span class="gene">DPYD</span> rs17376848 (heterozygous)</li>
+          <li><span class="check-icon">⚗️</span>Effect: Intermediate metabolizer — drug clears ~50% slower than normal</li>
+          <li><span class="check-icon">⚠️</span>Risk: Severe systemic toxicity at standard oncology doses</li>
+          <li><span class="check-icon c-red fw7">→</span><strong>Action: CPIC Level A recommends 50% dose reduction. Must disclose to any oncologist.</strong></li>
+        </ul>
+      </div>
+
+      <div class="card card-orange">
+        <div class="section-header">
+          <span class="badge badge-orange">🟠 HIGH</span>
+          <h3 style="margin:0;">Warfarin — Blood Thinner</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">🧬</span>Genes: <span class="gene">VKORC1</span> hom + <span class="gene">CYP4F2</span> hom + <span class="gene">CYP2C9</span> region het</li>
+          <li><span class="check-icon">⚗️</span>Effect: These variants counteract each other — net result is <strong>unpredictable</strong> with standard dosing tables</li>
+          <li><span class="check-icon c-orange fw7">→</span><strong>Action: Insist on pharmacogenomics-guided dosing. Standard warfarin tables DO NOT apply to you.</strong></li>
+        </ul>
+      </div>
+
+      <div class="card card-orange">
+        <div class="section-header">
+          <span class="badge badge-orange">🟠 HIGH</span>
+          <h3 style="margin:0;">Clopidogrel / Plavix — Heart Drug</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">🧬</span>Gene: <span class="gene">CYP2C19</span> gain-of-function (heterozygous)</li>
+          <li><span class="check-icon">⚗️</span>Effect: Faster drug activation → stronger platelet inhibition → elevated bleeding risk</li>
+          <li><span class="check-icon c-orange fw7">→</span><strong>Action: Disclose to any cardiologist before clopidogrel, prasugrel, or ticagrelor.</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Drug Response -->
+  <div class="slide" data-title="Drug Response" data-sub="Other Medications">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Pharmacogenomics</div>
+      <div class="slide-title">Drug Response — Other Medications</div>
+      <div class="slide-subtitle">Good to know for future prescriptions — share with relevant specialists</div>
+      <div class="divider"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Drug Class</th>
+              <th>Gene</th>
+              <th>Effect</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Isoniazid (TB antibiotic)</td>
+              <td><span class="gene">NAT2</span> het</td>
+              <td>Slow acetylator → hepatotoxicity risk</td>
+              <td><span class="c-orange">Disclose to prescriber</span></td>
+            </tr>
+            <tr>
+              <td>Opioids (pain/anesthesia)</td>
+              <td><span class="gene">OPRM1</span> G/G hom</td>
+              <td>Reduced mu-opioid receptor sensitivity</td>
+              <td><span class="c-yellow">Inform anesthesiologist</span></td>
+            </tr>
+            <tr>
+              <td>Naltrexone (addiction Rx)</td>
+              <td><span class="gene">OPRM1</span> G/G hom</td>
+              <td>Better-than-average naltrexone response</td>
+              <td><span class="c-green">Useful advantage</span></td>
+            </tr>
+            <tr>
+              <td>Antidepressants (SSRIs)</td>
+              <td><span class="gene">HTR1A</span> hom</td>
+              <td>Altered 5-HT1A autoreceptor response pattern</td>
+              <td><span class="c-yellow">Monitor with prescriber</span></td>
+            </tr>
+            <tr>
+              <td>Methotrexate</td>
+              <td><span class="gene">MTHFR</span> + <span class="gene">MTRR</span> + others</td>
+              <td>Multiple converging pathway effects</td>
+              <td><span class="c-orange">Disclose MTHFR status</span></td>
+            </tr>
+            <tr>
+              <td>Efavirenz (HIV antiviral)</td>
+              <td><span class="gene">CYP2B6</span> het</td>
+              <td>Intermediate metabolizer → altered exposure</td>
+              <td><span class="c-yellow">Inform if prescribed</span></td>
+            </tr>
+            <tr>
+              <td>Statins (cholesterol)</td>
+              <td><span class="gene">NPC1L1</span> het + others</td>
+              <td>Attenuated LDL-lowering response</td>
+              <td><span class="c-yellow">May need alternative agents</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:14px;">
+        Keep a printed copy of slides 7–8 in your wallet or phone for any ER visit, surgery, or new specialist appointment.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Mitochondrial -->
+  <div class="slide" data-title="Mitochondrial & Energy" data-sub="Complex I Bottleneck">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Energy Metabolism</div>
+      <div class="slide-title">Complex I Bottleneck</div>
+      <div class="slide-subtitle">Why fat works mechanistically better for your specific variants</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="card card-orange">
+            <h3>Nuclear ETC Finding</h3>
+            <p style="font-size:.87rem; line-height:1.5; color:var(--muted);">
+              <span class="gene">NDUFS8</span> (likely het, via sister's panel)<br>
+              Complex I Fe-S subunit — moderately reduced electron transfer efficiency
+            </p>
+          </div>
+          <div class="card card-red" style="margin-top:0;">
+            <h3>Compound Burden Stack</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon c-red">→</span><span class="gene">MTHFR</span> hom → reduced methylfolate → reduced SAM → impaired CoQ10 synthesis</li>
+              <li><span class="check-icon c-red">→</span><span class="gene">MTHFS</span> hom → "trapped" folate → impaired mitochondrial one-carbon</li>
+              <li><span class="check-icon c-red">→</span><span class="gene">MTHFD1</span> hom → reduced 10-formyl-THF → purine synthesis impaired</li>
+              <li><span class="check-icon c-red fw7">→</span><strong>Result: Complex I runs chronically below capacity</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-green">
+            <h3 style="color:var(--green);">The Ketone Solution (Mechanistic)</h3>
+            <div style="background:rgba(34,197,94,.08); border-radius:8px; padding:12px; margin-bottom:10px; font-size:.83rem; font-family:var(--mono); line-height:1.8; color:#86efac;">
+              Fat → β-hydroxybutyrate<br>
+              → acetyl-CoA<br>
+              → TCA cycle<br>
+              → enters at Complex II/III<br>
+              <span style="color:var(--green); font-weight:700;">↑ BYPASSES NDUFS8 Complex I entirely</span>
+            </div>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.4;">
+              Glucose requires Complex I. Ketones do not. Your advantage on a fat-based diet is mechanistically specific to your genetic variants.
+            </p>
+          </div>
+          <div class="card card-blue" style="margin-top:0;">
+            <h3>Targeted Support</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day</li>
+              <li><span class="check-icon">✅</span>Acetyl-L-Carnitine 500–1000 mg/day</li>
+              <li><span class="check-icon">✅</span>Riboflavin (B2) — Complex I FAD cofactor</li>
+              <li><span class="check-icon">✅</span>Magnesium — ATP synthesis cofactor</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        "Your advantage on a fat-based diet is not general — it is mechanistically tailored to your specific genetic variants."
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: ATG16L1 -->
+  <div class="slide" data-title="ATG16L1 — Autophagy" data-sub="Fasting Is Therapeutic">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Immune & Cellular Maintenance</div>
+      <div class="slide-title">Fasting Is Not Optional — It's Therapeutic</div>
+      <div class="slide-subtitle">ATG16L1 double-homozygous — autophagy severely impaired at the structural level</div>
+      <div class="divider"></div>
+      <div class="card card-red">
+        <div class="section-header">
+          <span class="badge badge-red">🔴 DOUBLE-HOM</span>
+          <h3 style="margin:0;"><span class="gene">ATG16L1</span> — rs2241880 +/+ AND rs10210302 +/+</h3>
+        </div>
+        <p style="font-size:.87rem; color:var(--muted); line-height:1.5;">ATG16L1 forms the autophagosome complex responsible for intracellular cleanup, damaged organelle removal, and gut immune regulation.</p>
+      </div>
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <div class="card card-red">
+            <h3>What Impaired Autophagy Means</h3>
+            <ul class="check-list" style="font-size:.85rem;">
+              <li><span class="check-icon c-red">→</span>Reduced clearance of damaged mitochondria</li>
+              <li><span class="check-icon c-red">→</span>Elevated NOD2-mediated gut inflammation</li>
+              <li><span class="check-icon c-red">→</span>Crohn's-type immune dysregulation susceptibility</li>
+              <li><span class="check-icon c-red">→</span>Potential subclinical intestinal permeability</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-green">
+            <h3>Your Countermeasures</h3>
+            <ul class="check-list" style="font-size:.85rem;">
+              <li><span class="check-icon">🔴</span><strong>12–16 hr daily fast</strong> — non-negotiable at double-hom</li>
+              <li><span class="check-icon">🟠</span>Monthly 24–36 hr extended fast — deeper clearance</li>
+              <li><span class="check-icon">✅</span>Low-carb/carnivore — reduces inflammatory substrates</li>
+              <li><span class="check-icon">✅</span>Curcumin 500–1000 mg/day (with fat) — AMPK activator</li>
+              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day</li>
+              <li><span class="check-icon">✅</span>Acetyl-L-Carnitine 500–1000 mg/day</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout red-callout" style="margin-top:12px;">
+        Daily fasting is not a weight loss strategy here — it is the primary pharmacological intervention for a confirmed autophagy structural deficit.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Athletic Profile -->
+  <div class="slide" data-title="Athletic Profile" data-sub="Performance Genetics">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Performance Genetics</div>
+      <div class="slide-title">Athletic Profile — Power Over Endurance</div>
+      <div class="slide-subtitle">Genetically optimized for resistance training, strength, and explosive output</div>
+      <div class="divider"></div>
+      <div class="card card-green">
+        <div class="section-header">
+          <span class="badge badge-green">🟢 STRENGTH GENE</span>
+          <h3 style="margin:0;"><span class="gene">ACTN3</span> R577X — R/R genotype (homozygous power)</h3>
+        </div>
+        <ul class="check-list" style="font-size:.87rem;">
+          <li><span class="check-icon">💪</span>Alpha-actinin-3 fully expressed in fast-twitch muscle fibers</li>
+          <li><span class="check-icon">🔥</span>R/R = strength/power phenotype — the elite sprinter/lifter genotype</li>
+          <li><span class="check-icon c-muted">ℹ️</span>X/X would be endurance; you are the opposite end of the spectrum</li>
+          <li><span class="check-icon">✅</span>"This explains the natural affinity for resistance training"</li>
+        </ul>
+      </div>
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <div class="card card-yellow">
+            <div class="section-header">
+              <span class="badge badge-yellow">🟡 MODIFIABLE</span>
+              <h3 style="margin:0; font-size:.95rem;"><span class="gene">FTO</span> — Obesity Locus</h3>
+            </div>
+            <p style="font-size:.84rem; color:var(--muted); line-height:1.4;">Population-level ~3 kg higher mean weight. Highly modifiable by diet and activity. Your carnivore/ancestral approach directly mitigates this variant.</p>
+          </div>
+          <div class="card card-blue" style="margin-top:0;">
+            <div class="section-header">
+              <span class="badge badge-blue">🌙 CIRCADIAN</span>
+              <h3 style="margin:0; font-size:.95rem;"><span class="gene">CLOCK</span> A/A — Evening Chronotype</h3>
+            </div>
+            <p style="font-size:.84rem; color:var(--muted); line-height:1.4;">Evening preference is genetic, not a character flaw. Afternoon/evening performance windows likely optimal for training and cognitive peak.</p>
+          </div>
+        </div>
+        <div>
+          <div class="card card-green">
+            <div class="section-header">
+              <span class="badge badge-green">🟢 SKELETAL</span>
+              <h3 style="margin:0; font-size:.95rem;"><span class="gene">LRP5</span> — Worth Disease</h3>
+            </div>
+            <p style="font-size:.84rem; color:var(--muted); line-height:1.4;">Homozygous gain-of-function in bone Wnt signaling. Result: HIGH bone mineral density — dense AND strong. DEXA T-scores will appear unusually high — this is expected, not pathological.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Brain/Mood -->
+  <div class="slide" data-title="Brain, Mood & Behavior" data-sub="Neurological Landscape">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Neurogenomics</div>
+      <div class="slide-title">Dopamine, Stress &amp; Reward</div>
+      <div class="slide-subtitle">The neurological landscape — understanding your cognitive and emotional baseline</div>
+      <div class="divider"></div>
+
+      <div class="card card-yellow">
+        <div class="section-header">
+          <span class="badge badge-yellow">🟡 KEY FINDING</span>
+          <h3 style="margin:0;"><span class="gene">COMT</span> Val158Met (heterozygous) — "The Warrior/Worrier Gene"</h3>
+        </div>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon">🧠</span>COMT degrades dopamine in the prefrontal cortex</li>
+          <li><span class="check-icon">⚗️</span>Val/Met = intermediate clearance — between fast and slow</li>
+          <li><span class="check-icon c-red">⚠️</span><strong>BUT: COMT requires SAM to function → your methylation deficit makes COMT run functionally SLOWER than het genotype alone suggests</strong></li>
+          <li><span class="check-icon">💡</span>Implication: Stress asymmetry — you may feel stress disproportionately relative to your genotype</li>
+        </ul>
+      </div>
+
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <div class="card card-blue">
+            <h3 style="font-size:.95rem;"><span class="gene">OPRM1</span> Asn40Asp (G/G hom)</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">🔬</span>Reduced mu-opioid receptor sensitivity</li>
+              <li><span class="check-icon c-orange">⚠️</span>Standard opioid doses may be less effective</li>
+              <li><span class="check-icon c-green">✅</span>G/G responds much better to naltrexone for behavioral compulsions</li>
+            </ul>
+          </div>
+          <div class="card card-blue" style="margin-top:0;">
+            <h3 style="font-size:.95rem;"><span class="gene">HTR1A</span> (homozygous)</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.4;">5-HT1A serotonin autoreceptor altered pattern. Affects antidepressant response if SSRIs ever prescribed.</p>
+          </div>
+        </div>
+        <div>
+          <div class="card card-green">
+            <h3>Practical Protocol</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">✅</span>Methylation support IS the COMT fix — more SAM → better catecholamine clearance</li>
+              <li><span class="check-icon">✅</span>L-Theanine — GABA support + dopamine buffering under stress</li>
+              <li><span class="check-icon">✅</span>Phosphatidylserine 100–200 mg — cortisol buffer; supports stress response</li>
+              <li><span class="check-icon">✅</span>Magnesium glycinate — NMDA modulation, sleep quality</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Immune -->
+  <div class="slide" data-title="Immune & Inflammation" data-sub="MPO, SERPINA1, Complement">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Immunogenomics</div>
+      <div class="slide-title">Immune System &amp; Inflammation</div>
+      <div class="slide-subtitle">MPO neutrophil function, alpha-1-antitrypsin, and complement system variants</div>
+      <div class="divider"></div>
+
+      <div class="card card-orange">
+        <div class="section-header">
+          <span class="badge badge-orange">🟠 DAMAGING (3/3 ALGORITHMS)</span>
+          <h3 style="margin:0;"><span class="gene">MPO</span> Arg569Trp (heterozygous)</h3>
+        </div>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon">🔬</span>SIFT 0.005 + PolyPhen-2 1.000/1.000 = confirmed damaging (max confidence across all three algorithms)</li>
+          <li><span class="check-icon">📋</span>ClinVar: Pathogenic / Likely pathogenic</li>
+          <li><span class="check-icon c-orange">⚠️</span>Effect: Partial myeloperoxidase deficiency — reduced neutrophil oxidative burst</li>
+          <li><span class="check-icon c-muted">ℹ️</span>Practical: Usually asymptomatic; may take longer to clear certain bacterial infections</li>
+          <li><span class="check-icon c-green">✅</span>Bonus: MPO variant associated with <em>reduced</em> Alzheimer's risk per ClinVar data</li>
+        </ul>
+      </div>
+
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <div class="card card-yellow">
+            <h3 style="font-size:.95rem;"><span class="gene">SERPINA1</span> S allele (MS genotype)</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">🫁</span>Alpha-1-antitrypsin at ~80% of normal</li>
+              <li><span class="check-icon c-green">✅</span>MS genotype is clinically mild — disease risk primarily with ZZ or SZ</li>
+              <li><span class="check-icon c-orange">⚠️</span>Smoking or heavy occupational dust exposure would tip the balance significantly</li>
+              <li><span class="check-icon">👁️</span>Monitor if chronic respiratory symptoms develop</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-yellow">
+            <h3 style="font-size:.95rem;"><span class="gene">CFH</span> His402Tyr (heterozygous)</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">👁️</span>Major age-related macular degeneration (AMD) susceptibility variant</li>
+              <li><span class="check-icon c-orange">⚠️</span>Het = ~2–3× lifetime AMD risk increase vs. population</li>
+              <li><span class="check-icon c-blue">ℹ️</span>Also modifies AMD drug response (bevacizumab vs. ranibizumab)</li>
+              <li><span class="check-icon c-green">→</span>Action: Eye exams with retinal assessment beginning at age 50</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Disease Risk -->
+  <div class="slide" data-title="Disease Risk" data-sub="Know Your Terrain">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Susceptibility Landscape</div>
+      <div class="slide-title">Know Your Terrain — Modify It</div>
+      <div class="slide-subtitle">Genetic susceptibilities are probabilities, not destinies — all have targeted countermeasures</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="card card-red">
+            <h3><span class="gene">TCF7L2</span> — Type 2 Diabetes</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.4; margin-bottom:8px;">Strongest known T2D susceptibility gene. Multiple variants including one homozygous. ~40–50% increased lifetime risk per copy.</p>
+            <div class="avoid-box" style="padding:8px 12px; margin-top:4px;">
+              <strong class="c-green">Direct mitigation:</strong> Low-glycemic ancestral diet + daily fasting = the precise genetic prescription.
+            </div>
+          </div>
+          <div class="card card-orange" style="margin-top:0;">
+            <h3>Autoimmune Susceptibilities</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon c-orange">●</span><span class="gene">IRF5</span> variants — systemic lupus susceptibility</li>
+              <li><span class="check-icon c-orange">●</span><span class="gene">CD244</span> + <span class="gene">SLC22A4</span> — rheumatoid arthritis</li>
+              <li><span class="check-icon c-yellow">●</span><span class="gene">TG</span> het — autoimmune thyroid (Hashimoto's/Graves')</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-yellow">
+            <h3>Eye &amp; Vision</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon c-yellow">●</span><span class="gene">LOXL1</span> het — exfoliation syndrome → secondary glaucoma risk</li>
+              <li><span class="check-icon c-yellow">●</span><span class="gene">CFH</span> het — AMD (see slide 13)</li>
+            </ul>
+          </div>
+          <div class="card card-yellow" style="margin-top:0;">
+            <h3>Neural Tube / Pregnancy</h3>
+            <p style="font-size:.82rem; color:var(--muted); line-height:1.4;"><span class="gene">TBXT</span> hom + <span class="gene">MTHFR</span> compound — neural tube susceptibility interaction. Primarily relevant for pregnancy planning — ensure methylfolate status is optimal <em>before</em> conception.</p>
+          </div>
+          <div class="card card-blue" style="margin-top:0;">
+            <h3>Infectious Disease</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon c-blue">●</span><span class="gene">SLC11A1</span> + <span class="gene">CD209</span> het — tuberculosis susceptibility (population-level)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15: Cancer Screen -->
+  <div class="slide" data-title="Cancer Gene Screen" data-sub="What Was Checked">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Hereditary Cancer Panel</div>
+      <div class="slide-title">Cancer Gene Screen — What Was Checked</div>
+      <div class="slide-subtitle">Comprehensive review of actionable hereditary cancer genes</div>
+      <div class="divider"></div>
+
+      <div class="card card-green">
+        <div class="section-header">
+          <span class="badge badge-green">🟢 CLEAR — NO ACTIONABLE VARIANTS</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span class="gene">BRCA1</span>
+          <span class="gene">BRCA2</span>
+          <span class="gene">PALB2</span>
+          <span class="gene">ATM</span>
+          <span class="gene">CHEK2</span>
+        </div>
+        <p style="font-size:.83rem; color:var(--muted); margin-top:8px;">Hereditary breast/ovarian cancer genes clear. Factor V Leiden (thrombosis) — clear.</p>
+      </div>
+
+      <div class="card card-red" style="margin-top:12px;">
+        <div class="section-header">
+          <span class="badge badge-orange">⚠️ FLAG — CLINICAL VERIFICATION RECOMMENDED</span>
+        </div>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon c-orange">⚠️</span><span class="gene">MSH6</span> (Lynch syndrome) — homozygous array call likely artifact; SIFT tolerated; <strong>but Lynch syndrome warrants clinical gene sequencing for certainty.</strong> CRC colonoscopy schedule worth discussing with GI.</li>
+          <li><span class="check-icon c-orange">⚠️</span><span class="gene">PMS2</span> (Lynch syndrome) — same artifact caveat applies</li>
+          <li><span class="check-icon c-yellow">⚠️</span><span class="gene">POLD1</span> het — Polymerase proofreading polyposis — SIFT 0.010 deleterious in exonuclease domain; conflicting ClinVar. Relevant if family history of colorectal polyps.</li>
+        </ul>
+      </div>
+
+      <div class="card card-yellow" style="margin-top:12px;">
+        <div class="section-header">
+          <span class="badge badge-yellow">🟡 CARRIER STATUS</span>
+        </div>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon c-yellow">●</span><span class="gene">BLM</span> het — Bloom syndrome carrier; carriers may have modest elevated cancer risk</li>
+          <li><span class="check-icon c-yellow">●</span><span class="gene">GBA1</span> — array call likely artifact but <strong>GBA1 carrier status is relevant for Parkinson's risk; clinical GBA1 sequencing recommended</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16: LRP5 Good News -->
+  <div class="slide" data-title="LRP5 Worth Disease" data-sub="The Good News">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Structural Finding — Positive</div>
+      <div class="slide-title">LRP5 Worth Disease — Denser, Stronger Bones</div>
+      <div class="slide-subtitle">A gain-of-function variant that is unambiguously beneficial for longevity</div>
+      <div class="divider"></div>
+
+      <div class="card card-green">
+        <div class="section-header">
+          <span class="badge badge-green">🟢 PATHOGENIC (GAIN-OF-FUNCTION)</span>
+          <h3 style="margin:0;"><span class="gene">LRP5</span> Ala214Thr (homozygous)</h3>
+        </div>
+        <ul class="check-list" style="font-size:.87rem;">
+          <li><span class="check-icon">📋</span>ClinVar: Pathogenic — Worth disease / autosomal dominant osteopetrosis 1</li>
+          <li><span class="check-icon">🔬</span>SIFT 0.005 — confirmed gain-of-function in bone Wnt signaling pathway</li>
+        </ul>
+      </div>
+
+      <div class="two-col" style="margin-top:14px;">
+        <div>
+          <div class="card card-blue">
+            <h3>What Worth Disease Actually Is</h3>
+            <ul class="check-list" style="font-size:.85rem;">
+              <li><span class="check-icon c-green">✅</span>Not a disease in the conventional sense — it's elevated bone density</li>
+              <li><span class="check-icon c-green">✅</span>Bones are dense AND strong (unlike brittle osteopetrosis)</li>
+              <li><span class="check-icon c-muted">ℹ️</span>Sometimes accompanied by torus palatinus — benign jaw ridge thickening</li>
+              <li><span class="check-icon c-muted">ℹ️</span>DEXA scans will show unusually high T-scores — this is expected</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-green">
+            <h3>Practical Implications</h3>
+            <ul class="check-list" style="font-size:.85rem;">
+              <li><span class="check-icon c-green">✅</span>Osteoporosis risk is very low — structural protection</li>
+              <li><span class="check-icon c-orange">⚠️</span>Standard T-score thresholds on DEXA don't apply — your baseline is significantly higher</li>
+              <li><span class="check-icon c-green">✅</span>Fracture risk significantly below population average</li>
+              <li><span class="check-icon c-green">✅</span>Strong longevity signal — skeletal integrity maintained with age</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:14px;">
+        If a DEXA scan ever shows "abnormally high" bone density, this is the explanation. Disclose <span style="font-family:var(--mono); font-size:.9em; color:#93c5fd;">LRP5</span> Worth disease to your radiologist and ordering physician.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 17: Talk to Doctors -->
+  <div class="slide" data-title="Talk to Your Doctors" data-sub="What to Carry">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Medical Disclosure Guide</div>
+      <div class="slide-title">Information Your Providers Need Before Treating You</div>
+      <div class="slide-subtitle">Carry this with you — especially for ER, surgery, or new specialists</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="action-block" style="border-left: 3px solid var(--red);">
+            <h4 style="color:var(--red);">🔴 Always Disclose (Any Provider)</h4>
+            <ol>
+              <li><span class="gene">DPYD</span> het — fluorouracil/capecitabine 50% dose reduction required</li>
+              <li><span class="gene">VKORC1</span> hom + <span class="gene">CYP4F2</span> hom — warfarin standard tables don't apply</li>
+              <li><span class="gene">CYP2C19</span> gain-of-function — clopidogrel/platelet drug bleeding risk</li>
+            </ol>
+          </div>
+          <div class="action-block" style="border-left: 3px solid var(--orange); margin-top:0;">
+            <h4 style="color:var(--orange);">🟠 Disclose Pre-Surgery / Hospitalization</h4>
+            <ol>
+              <li><span class="gene">PROS1</span> Thr78Met — protein S thrombophilia awareness</li>
+              <li><span class="gene">F10</span> hom inference — Factor X clotting, pre-surgery anticoagulation</li>
+              <li><span class="gene">LRP5</span> Worth disease — bone density context for orthopedics</li>
+            </ol>
+          </div>
+        </div>
+        <div>
+          <div class="action-block" style="border-left: 3px solid var(--yellow);">
+            <h4 style="color:var(--yellow);">🟡 Specialty-Specific Disclosures</h4>
+            <ul>
+              <li>🫁 <strong>Pulmonology:</strong> <span class="gene">SERPINA1</span> MS — if respiratory symptoms develop</li>
+              <li>👁️ <strong>Ophthalmology:</strong> <span class="gene">CFH</span> H402Y — AMD drug selection</li>
+              <li>🧠 <strong>Psychiatry:</strong> <span class="gene">HTR1A</span> hom + <span class="gene">COMT</span> het — antidepressant selection</li>
+              <li>💊 <strong>Pain Mgmt / Anesthesia:</strong> <span class="gene">OPRM1</span> G/G hom — opioid response</li>
+              <li>🫀 <strong>Cardiology:</strong> <span class="gene">CYP2C19</span> gain-of-function</li>
+              <li>🧬 <strong>Oncology:</strong> <span class="gene">DPYD</span> het — CPIC Level A protocol</li>
+              <li>🦴 <strong>Radiology / DEXA:</strong> <span class="gene">LRP5</span> Worth disease — T-scores interpreted differently</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 18: Action List -->
+  <div class="slide" data-title="Priority Action List" data-sub="What to Do — In Order">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Your Roadmap</div>
+      <div class="slide-title">Priority Action List — In Order</div>
+      <div class="slide-subtitle">Everything you can do today vs. what requires testing or appointments</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="action-block" style="border-left: 3px solid var(--green);">
+            <h4 style="color:var(--green);">✅ TODAY (No Doctor Visit Required)</h4>
+            <ol>
+              <li>Switch all supplements to <strong>methylfolate + folinic acid</strong> — discard folic acid</li>
+              <li>Switch B12 to <strong>sublingual methylcobalamin</strong></li>
+              <li>Add <strong>riboflavin B2</strong> — 25–50 mg/day</li>
+              <li>Add <strong>TMG/betaine</strong> — 1–3 g/day</li>
+              <li>Lock in <strong>12–16 hour daily fasting window</strong> — therapeutic requirement</li>
+            </ol>
+          </div>
+          <div class="action-block" style="border-left: 3px solid var(--yellow); margin-top:0;">
+            <h4 style="color:var(--yellow);">🧪 SOON (Testing — No Rx Needed)</h4>
+            <ol>
+              <li><strong>Plasma homocysteine baseline</strong> — target &lt; 7 µmol/L</li>
+              <li><strong>Vitamin D (25-OH-D3)</strong> — baseline level</li>
+              <li><strong>APOE clinical test</strong> — array calls unreliable; critical for dementia planning</li>
+              <li><strong>GBA1 clinical sequencing</strong> — Parkinson's carrier status confirmation</li>
+            </ol>
+          </div>
+        </div>
+        <div>
+          <div class="action-block" style="border-left: 3px solid var(--blue);">
+            <h4 style="color:var(--blue);">📋 MEDICAL APPOINTMENTS</h4>
+            <ol>
+              <li><strong>GX Sciences Pro7 panel</strong> — directly confirm MTHFS / MTHFD1 / SLC19A1 in your own DNA (sister's panel informed these calls)</li>
+              <li><strong>MSH6 / PMS2 clinical sequencing</strong> — resolve Lynch syndrome array artifacts with certainty</li>
+              <li><strong>Ophthalmology</strong> — establish AMD baseline (CFH het); retinal imaging</li>
+              <li><strong>DPYD confirmation via clinical lab</strong> — before any chemotherapy could ever be considered</li>
+            </ol>
+          </div>
+          <div class="card card-green" style="margin-top:12px; padding:14px 16px;">
+            <h3 style="font-size:.9rem; color:var(--green);">Bottom Line</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.5;">
+              The methylation protocol and fasting window are the two highest-leverage interventions. Start there. Most of the disease risk in this report is modifiable by the same two interventions: ancestral diet + methylation support.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<script>
+(function () {
+  'use strict';
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+  let prevIdx = -1;
+  let overviewOpen = false;
+
+  const progressBar = document.getElementById('progress-bar');
+  const counter = document.getElementById('slide-counter');
+  const overviewEl = document.getElementById('overview');
+  const overviewGrid = document.getElementById('overview-grid');
+  const kbHint = document.getElementById('kb-hint');
+
+  // Build overview thumbnails
+  slides.forEach((slide, i) => {
+    const t = slide.dataset.title || ('Slide ' + (i + 1));
+    const s = slide.dataset.sub || '';
+    const thumb = document.createElement('div');
+    thumb.className = 'overview-thumb' + (i === 0 ? ' active-thumb' : '');
+    thumb.innerHTML = `<div class="thumb-num">SLIDE ${String(i + 1).padStart(2, '0')}</div><div class="thumb-title">${t}</div><div class="thumb-sub">${s}</div>`;
+    thumb.addEventListener('click', () => {
+      goTo(i);
+      closeOverview();
+    });
+    overviewGrid.appendChild(thumb);
+  });
+
+  function updateUI() {
+    counter.textContent = (current + 1) + ' / ' + total;
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    // Overview thumbs
+    document.querySelectorAll('.overview-thumb').forEach((t, i) => {
+      t.classList.toggle('active-thumb', i === current);
+    });
+  }
+
+  function goTo(idx) {
+    if (idx === current) return;
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+
+    const direction = idx > current ? 1 : -1;
+    const oldSlide = slides[current];
+    const newSlide = slides[idx];
+
+    // Exit old
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add(direction > 0 ? 'exit-left' : 'exit-left');
+    // Actually use a micro-timeout to let the browser paint before removing
+    setTimeout(() => { oldSlide.classList.remove('exit-left'); }, 450);
+
+    // Enter new
+    newSlide.style.transform = direction > 0 ? 'translateX(30px)' : 'translateX(-30px)';
+    newSlide.style.opacity = '0';
+    newSlide.classList.add('active');
+    // Force reflow
+    void newSlide.offsetWidth;
+    newSlide.style.transform = '';
+    newSlide.style.opacity = '';
+
+    current = idx;
+    updateUI();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function openOverview() {
+    overviewOpen = true;
+    overviewEl.classList.add('active');
+  }
+  function closeOverview() {
+    overviewOpen = false;
+    overviewEl.classList.remove('active');
+  }
+  function toggleOverview() {
+    if (overviewOpen) closeOverview(); else openOverview();
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', function (e) {
+    if (overviewOpen) {
+      if (e.key === 'Escape' || e.key.toLowerCase() === 'o') closeOverview();
+      return;
+    }
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault(); prev(); break;
+      case ' ':
+        e.preventDefault(); next(); break;
+      case 'o':
+      case 'O':
+        toggleOverview(); break;
+      case 'f':
+      case 'F':
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+        } else {
+          document.exitFullscreen && document.exitFullscreen();
+        }
+        break;
+      case 'Escape':
+        break;
+    }
+  });
+
+  // Nav buttons
+  document.getElementById('nav-prev').addEventListener('click', prev);
+  document.getElementById('nav-next').addEventListener('click', next);
+  document.getElementById('overview-close').addEventListener('click', closeOverview);
+
+  // Touch swipe
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (overviewOpen) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  // Hide keyboard hint after a few seconds
+  setTimeout(() => { kbHint.style.opacity = '0'; }, 5000);
+
+  // Init
+  updateUI();
+  progressBar.style.width = (1 / total * 100) + '%';
+
+})();
+</script>
+</body>
+</html>
