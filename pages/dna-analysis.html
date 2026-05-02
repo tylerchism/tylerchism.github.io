@@ -240,6 +240,49 @@
   .gate-text strong { color: var(--text); }
   .gate-text .gene-inline { font-family: var(--mono); font-size: .82em; color: #93c5fd; }
 
+  /* ===== GATE ACCORDION ===== */
+  details.gate-expand { margin-top: 5px; }
+  details.gate-expand summary {
+    font-size: .76rem;
+    color: var(--blue);
+    cursor: pointer;
+    list-style: none;
+    padding: 2px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+  }
+  details.gate-expand summary::-webkit-details-marker { display: none; }
+  details.gate-expand summary::before {
+    content: '▶';
+    font-size: .6rem;
+    transition: transform .2s;
+    display: inline-block;
+    color: var(--blue);
+  }
+  details.gate-expand[open] summary::before { transform: rotate(90deg); }
+  .gate-expand-body {
+    margin-top: 7px;
+    padding: 10px 12px;
+    background: rgba(15,23,42,0.7);
+    border-radius: 6px;
+    border-left: 2px solid var(--blue);
+    font-size: .79rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .gate-expand-body .expand-section { margin-bottom: 7px; }
+  .gate-expand-body .expand-section:last-child { margin-bottom: 0; }
+  .gate-expand-body .expand-label {
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
   /* ===== SUPPLEMENT LIST ===== */
   .supp-list { list-style: none; }
   .supp-list li {
@@ -265,6 +308,17 @@
   }
   .avoid-box strong { color: var(--red); }
 
+  /* ===== REACH BOX ===== */
+  .reach-box {
+    background: var(--green-dim);
+    border: 1px solid rgba(34,197,94,.3);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: .88rem;
+  }
+  .reach-box strong { color: var(--green); }
+
   /* ===== CALLOUT ===== */
   .callout {
     background: var(--card2);
@@ -278,6 +332,16 @@
     line-height: 1.5;
   }
   .callout.red-callout { border-left-color: var(--red); color: #fca5a5; background: var(--red-dim); font-style: normal; }
+  .callout.green-callout { border-left-color: var(--green); color: #86efac; background: var(--green-dim); font-style: normal; }
+
+  /* ===== FOOTNOTE ===== */
+  .footnote {
+    font-size: .72rem;
+    color: rgba(148,163,184,.5);
+    line-height: 1.4;
+    margin-top: 10px;
+    font-style: italic;
+  }
 
   /* ===== TITLE SLIDE ===== */
   .title-slide { text-align: center; }
@@ -514,6 +578,9 @@
 
   /* Wide table helper */
   .table-wrap { overflow-x: auto; }
+
+  /* Appendix eyebrow */
+  .slide-eyebrow.appendix { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -593,13 +660,13 @@
             </tr>
             <tr>
               <td><span class="badge badge-red">🔴 HIGH</span></td>
-              <td><span class="gene">DPYD</span> — Fluorouracil chemotherapy toxicity risk</td>
-              <td><span class="c-orange fw7">Heterozygous</span></td>
+              <td><span class="gene">ATG16L1</span> double-hom — cellular cleanup severely impaired</td>
+              <td><span class="c-red fw7">Both copies, both variants</span></td>
             </tr>
             <tr>
-              <td><span class="badge badge-red">🔴 HIGH</span></td>
-              <td><span class="gene">ATG16L1</span> double-hom — autophagy severely impaired</td>
-              <td><span class="c-red fw7">Likely Hom (both)</span></td>
+              <td><span class="badge badge-orange">🟠 MOD-HIGH</span></td>
+              <td><span class="gene">DPYD</span> — Fluorouracil chemotherapy toxicity risk</td>
+              <td><span class="c-orange fw7">Heterozygous</span></td>
             </tr>
             <tr>
               <td><span class="badge badge-orange">🟠 MOD-HIGH</span></td>
@@ -689,42 +756,183 @@
     <div class="slide-inner">
       <div class="slide-eyebrow">Folate / B12 Pathway</div>
       <div class="slide-title">The Methylation Cascade</div>
-      <div class="slide-subtitle">Impaired at Every Gate — A 7-Point Compound Deficit</div>
+      <div class="slide-subtitle">Impaired at Every Gate — tap any item to understand what's breaking and why it matters</div>
       <div class="divider"></div>
       <ul class="gate-list">
+
         <li>
           <div class="gate-num">1</div>
-          <div class="gate-text"><strong>Dietary folate intake</strong> — <span class="gene-inline">SLC19A1/RFC1</span> (likely hom) — folate gets in slowly</div>
+          <div class="gate-text">
+            <strong>Folate gets in slowly</strong> — <span class="gene-inline">SLC19A1/RFC1</span> transporter (likely hom)
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  The protein that ferries folate from food across your gut wall into your bloodstream works at reduced capacity. Folate still gets in — just at a lower rate per serving.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  Prioritize high-folate foods: liver, dark leafy greens (raw — cooking destroys folate), avocado. Eating more of these foods still helps because you're making up for throughput, not a total block.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  Lower folate input means less raw material entering the whole downstream cascade. Every gate after this is already working from a deficit starting point.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">2</div>
-          <div class="gate-text"><strong>Folate activation</strong> — <span class="gene-inline">MTHFS</span> (likely hom) — folate gets "trapped"</div>
+          <div class="gate-text">
+            <strong>Folate gets trapped</strong> — <span class="gene-inline">MTHFS</span> (likely hom)
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  Folate in your body exists in several forms. One form (5-formyl-THF) is like folate that's been put in a locked box — it can't be used for methylation until an enzyme unlocks it. Your MTHFS variant means that enzyme works poorly, so folate piles up in the locked box, unusable.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  Eating more folate doesn't fix this — you'd just accumulate more trapped folate. The only workaround is folinic acid (a specific supplement form) which enters the pathway downstream of this lock.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  Paradoxically, high folate intake without the right supplement can make this worse — the trapped form competes with usable forms at receptor sites. This is part of why synthetic folic acid (in fortified foods) is a problem for your genetics specifically.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">3</div>
-          <div class="gate-text"><strong>Folate cycling</strong> — <span class="gene-inline">MTHFD1</span> (likely hom) — mitochondrial one-carbon metabolism impaired</div>
+          <div class="gate-text">
+            <strong>Mitochondria can't run their folate loop</strong> — <span class="gene-inline">MTHFD1</span> (likely hom)
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  Your mitochondria run their own separate folate cycle to build DNA building blocks (purines) and to transfer carbon units for energy production. MTHFD1 runs that cycle. When it's impaired, mitochondria can't make enough of their own raw materials.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  Serine-rich foods (meat, eggs, dairy) feed alternative carbon-transfer paths. This is one reason a protein-forward diet makes intuitive sense for your genetics — you're compensating for reduced mitochondrial self-sufficiency.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  This one hits energy directly, not just methylation. Impaired MTHFD1 means your mitochondria are running a constrained operation even before we get to the Complex I issues covered in slide 7. Fatigue that doesn't resolve with rest is one downstream signal.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">4</div>
-          <div class="gate-text"><strong>Core methylation</strong> — <span class="gene-inline">MTHFR C677T</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span> — ~70% enzyme reduction</div>
+          <div class="gate-text">
+            <strong>Core methylation enzyme at ~30% capacity</strong> — <span class="gene-inline">MTHFR C677T</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span>
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  MTHFR converts folate into its active methylating form (5-MTHF). This is the central conversion step the whole system depends on. Being homozygous for C677T means the enzyme works at roughly 30% of normal activity. This is confirmed at maximum confidence by both SIFT and PolyPhen-2.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  Riboflavin (B2) is MTHFR's required cofactor — without enough B2, even the 30% that remains can't run efficiently. Liver, dairy, eggs, and almonds are B2-rich. This is also why B2 supplementation (25–50 mg) has outsized benefit for C677T carriers specifically. Natural folate from food is still valuable; synthetic folic acid is counterproductive (see slide 6).
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  Everything methylation-dependent gets throttled here: SAM production, homocysteine clearance, DNA methylation patterns, neurotransmitter synthesis. Elevated homocysteine is the most testable downstream marker — testing this number is the most important lab you can order.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">5</div>
-          <div class="gate-text"><strong>B12 stomach absorption</strong> — <span class="gene-inline">GIF</span> (likely het) — less B12 extracted from food</div>
+          <div class="gate-text">
+            <strong>Less B12 extracted from food</strong> — <span class="gene-inline">GIF</span> (likely het)
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  Intrinsic factor (GIF) is a protein your stomach secretes that grabs B12 from food and escorts it to the absorption site in your small intestine. Reduced intrinsic factor = less B12 extracted per meal, even if you eat B12-rich foods.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  Beef liver, oysters, clams, and sardines are extremely B12-dense — eating these regularly still helps because you're compensating for absorption efficiency with volume. Rare/less-cooked preparations preserve B12 better than well-done. High-dose sublingual B12 bypasses this entirely (absorbed directly through mouth tissue, no stomach acid or intrinsic factor needed).
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  A B12 blood test can look "normal" while functional deficiency exists at the cell level — because most B12 tests measure total B12, not active B12 in use. Elevated MMA (methylmalonic acid) is a better functional marker.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">6</div>
-          <div class="gate-text"><strong>B12 blood transport</strong> — <span class="gene-inline">TCN2</span> (het confirmed) — B12 delivery to cells impaired</div>
+          <div class="gate-text">
+            <strong>B12 delivery to cells impaired</strong> — <span class="gene-inline">TCN2</span> (het confirmed)
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  Transcobalamin II is a transport protein that carries B12 through the bloodstream to your cells. Even the B12 you do absorb doesn't deliver as efficiently. Think of it as a reduced fleet of B12 taxis — some passengers (B12) are left waiting.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  No strong dietary workaround for transport — you compensate by keeping B12 levels higher so even reduced transport capacity is carrying adequate load. This is another reason sublingual methylcobalamin at therapeutic doses (not RDA levels) makes sense.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  This stacks on top of Gate 5. Two independent impairments on the B12 supply chain before you even get to Gate 7, which handles recycling.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
         <li>
           <div class="gate-num">7</div>
-          <div class="gate-text"><strong>B12 recycling</strong> — <span class="gene-inline">MTRR Ile22Met</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span> — SIFT 0.000 (max deleteriousness)</div>
+          <div class="gate-text">
+            <strong>B12 gets used up and can't be recycled</strong> — <span class="gene-inline">MTRR Ile22Met</span> <span class="badge badge-red" style="font-size:9px;">CONFIRMED HOM</span>
+            <details class="gate-expand">
+              <summary>What's happening &amp; what it means</summary>
+              <div class="gate-expand-body">
+                <div class="expand-section">
+                  <div class="expand-label">What's breaking</div>
+                  MTRR regenerates active B12 from its spent form. Every time B12 donates a methyl group, it ends up oxidized and unusable until MTRR recharges it. Your homozygous MTRR variant means this recharging barely works — so B12 drains rapidly even if your levels look adequate. SIFT score of 0.000 means all three major predictive algorithms rate this at maximum deleteriousness.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Dietary lever</div>
+                  No food fixes poor recycling directly. The only approach is to constantly replenish active B12 faster than it drains — hence the need for sublingual methylcobalamin supplementation, not just dietary B12. Keeping total B12 high in the system gives MTRR enough substrate to work with even at reduced efficiency.
+                </div>
+                <div class="expand-section">
+                  <div class="expand-label">Health implication</div>
+                  This is the hardest gate to compensate for through diet alone, and it compounds with Gates 5 and 6. Together, these three B12 gates mean functional B12 deficiency is the default state without active intervention, regardless of how much B12-rich food you eat.
+                </div>
+              </div>
+            </details>
+          </div>
         </li>
+
       </ul>
       <div class="card card-orange" style="margin-top:10px;">
         <div style="display:flex; align-items:center; gap:10px;">
           <span style="font-size:1.1rem;">🔄</span>
-          <div><strong>Backup pathway:</strong> <span class="gene">BHMT</span> Arg239Gln (hom) — backup choline-methionine route also reduced</div>
+          <div><strong>Backup pathway also impaired:</strong> <span class="gene">BHMT</span> Arg239Gln (hom) — a separate route that bypasses the main cascade is also reduced</div>
         </div>
       </div>
       <div class="callout red-callout" style="margin-top:10px;">
@@ -734,39 +942,44 @@
   </div>
 
   <!-- SLIDE 5: Methylation Consequences -->
-  <div class="slide" data-title="Methylation Consequences" data-sub="Downstream of Low SAM">
+  <div class="slide" data-title="What Low Methylation Does" data-sub="Downstream of the Cascade">
     <div class="slide-inner">
       <div class="slide-eyebrow">Biochemical Cascade</div>
-      <div class="slide-title">Downstream Consequences of Low SAM</div>
-      <div class="slide-subtitle">SAM (S-adenosylmethionine) is the universal methyl donor for critical biology</div>
+      <div class="slide-title">What Happens When the Factory Runs Low</div>
+      <div class="slide-subtitle">SAM is the product of that broken pipeline — and it runs everything below</div>
       <div class="divider"></div>
+
+      <div class="callout" style="margin-bottom:20px; font-style:normal; color:var(--text);">
+        <strong style="color:var(--blue);">How this follows from slide 4:</strong> Every gate we just saw feeds into producing SAM (S-adenosylmethionine) — the body's universal methyl donor. SAM is like a molecular postal service that delivers "methyl groups" to hundreds of targets. When the factory (slide 4) is broken at every stage, the postal service runs chronically understaffed. This slide shows what stops getting delivered.
+      </div>
+
       <div class="two-col">
         <div>
           <div class="card card-blue">
-            <h3 style="color:var(--blue);">SAM Methylates...</h3>
+            <h3 style="color:var(--blue);">SAM Needs to Reach...</h3>
             <ul class="check-list">
-              <li><span class="check-icon">🧬</span>DNA methylation (gene expression regulation)</li>
-              <li><span class="check-icon">🧠</span>Neurotransmitter synthesis (dopamine, serotonin)</li>
-              <li><span class="check-icon">🔬</span>Phospholipid synthesis (brain membrane health)</li>
-              <li><span class="check-icon">🧹</span>Detoxification pathways (estrogens, toxins)</li>
-              <li><span class="check-icon">⚡</span>Mitochondrial membrane biogenesis</li>
-              <li><span class="check-icon">💊</span>CoQ10 synthesis support</li>
+              <li><span class="check-icon">🧬</span><strong>DNA methylation</strong> — controls which genes get turned on or off. Low SAM = dysregulated gene expression.</li>
+              <li><span class="check-icon">🧠</span><strong>Neurotransmitters</strong> — dopamine and serotonin synthesis both require methylation steps. Low SAM = neurotransmitter bottleneck.</li>
+              <li><span class="check-icon">🔬</span><strong>Brain membranes</strong> — phospholipid synthesis for neuronal membrane health</li>
+              <li><span class="check-icon">🧹</span><strong>Detoxification</strong> — methylation deactivates estrogens, histamine, environmental toxins</li>
+              <li><span class="check-icon">⚡</span><strong>Mitochondrial membranes</strong> — membrane biogenesis requires methylation</li>
+              <li><span class="check-icon">💊</span><strong>CoQ10 synthesis</strong> — a methylation step is required to make CoQ10, your primary mitochondrial antioxidant/electron carrier</li>
             </ul>
           </div>
         </div>
         <div>
           <div class="card card-red">
-            <h3 style="color:var(--red);">Warning Signs to Watch</h3>
+            <h3 style="color:var(--red);">What to Watch For</h3>
             <ul class="check-list">
-              <li><span class="check-icon">🔴</span>Elevated homocysteine<br><span class="c-muted" style="font-size:.82em;">Test this — target &lt; 7 µmol/L</span></li>
-              <li><span class="check-icon">🔴</span>Brain fog, mood instability under stress</li>
-              <li><span class="check-icon">🔴</span>Poor methylation of toxins and estrogens</li>
-              <li><span class="check-icon">🔴</span>Impaired DNA repair signaling</li>
+              <li><span class="check-icon">🔴</span><strong>Elevated homocysteine</strong> — the most direct measurable signal of low SAM. Target &lt; 7 µmol/L. Get this tested.</li>
+              <li><span class="check-icon">🔴</span>Brain fog and mood instability — especially under stress when methylation demand spikes</li>
+              <li><span class="check-icon">🔴</span>Poor toxin and estrogen clearance — sluggish detox, hormonal sensitivity</li>
+              <li><span class="check-icon">🔴</span>Impaired DNA repair — the signaling that coordinates cellular repair is methylation-dependent</li>
             </ul>
           </div>
           <div class="card card-yellow" style="margin-top:0;">
-            <h3 style="color:var(--yellow); font-size:.95rem;">COMT Connection</h3>
-            <p style="font-size:.85rem; color:var(--muted); line-height:1.5;">COMT requires SAM to degrade dopamine. Low SAM = COMT runs slower regardless of genotype → catecholamine buildup under stress.</p>
+            <h3 style="color:var(--yellow); font-size:.95rem;">The COMT Compounding Effect</h3>
+            <p style="font-size:.85rem; color:var(--muted); line-height:1.5;">COMT (your stress-dopamine clearance enzyme) requires SAM to work. Low SAM means COMT runs slower regardless of your genotype — so stress hits harder and takes longer to metabolically clear. You may feel stress disproportionately relative to the situation.</p>
           </div>
         </div>
       </div>
@@ -776,244 +989,208 @@
     </div>
   </div>
 
-  <!-- SLIDE 6: Methylation Protocol -->
-  <div class="slide" data-title="Methylation Protocol" data-sub="The 7-Gate Supplement Stack">
+  <!-- SLIDE 6: Methylation Protocol — Diet First -->
+  <div class="slide" data-title="The Methylation Protocol" data-sub="Food First, Then Supplements">
     <div class="slide-inner">
       <div class="slide-eyebrow">Actionable Protocol</div>
-      <div class="slide-title">The Methylation Protocol — Start Here</div>
-      <div class="slide-subtitle">Immediate actions — no prescription required</div>
-      <div class="divider"></div>
-      <ul class="supp-list">
-        <li>
-          <span class="supp-icon">1️⃣</span>
-          <div><strong class="c-green">L-Methylfolate (5-MTHF)</strong> — bypasses <span class="gene">MTHFR</span>, <span class="gene">MTHFS</span>, <span class="gene">MTHFD1</span> blocks entirely</div>
-        </li>
-        <li>
-          <span class="supp-icon">2️⃣</span>
-          <div><strong class="c-green">Folinic Acid (5-formyl-THF)</strong> — specifically bypasses the <span class="gene">MTHFS</span> "folate trap" — important adjunct</div>
-        </li>
-        <li>
-          <span class="supp-icon">3️⃣</span>
-          <div><strong class="c-green">Sublingual Methylcobalamin</strong> — bypasses <span class="gene">GIF</span> gastric absorption impairment; active form supports <span class="gene">MTRR</span></div>
-        </li>
-        <li>
-          <span class="supp-icon">4️⃣</span>
-          <div><strong class="c-green">Riboflavin / B2</strong> — essential <span class="gene">MTHFR</span> FAD cofactor; 25–50 mg/day. Thermolabile variant responds especially well.</div>
-        </li>
-        <li>
-          <span class="supp-icon">5️⃣</span>
-          <div><strong class="c-green">TMG (Betaine)</strong> — BHMT bypass route; more critical given <span class="gene">BHMT</span> hom SIFT-confirmed impairment; 1–3 g/day</div>
-        </li>
-        <li>
-          <span class="supp-icon">6️⃣</span>
-          <div><strong class="c-green">P5P (active B6)</strong> — CBS/transsulfuration pathway support; lowers homocysteine via alternate route</div>
-        </li>
-        <li>
-          <span class="supp-icon">7️⃣</span>
-          <div><strong class="c-green">Choline (food or supplement)</strong> — PEMT substrate; reduces SAM drain; eggs are an excellent dietary source</div>
-        </li>
-      </ul>
-      <div class="avoid-box">
-        <strong>🚫 AVOID: Folic acid (synthetic)</strong> — accumulates as unmetabolized folic acid (UMFA) due to <span class="gene">MTHFR</span> block. Competes with active forms at receptor sites. Found in fortified foods — read labels.
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 7: PGx Critical Three -->
-  <div class="slide" data-title="Pharmacogenomics" data-sub="The Critical Three">
-    <div class="slide-inner">
-      <div class="slide-eyebrow">Pharmacogenomics — URGENT</div>
-      <div class="slide-title">Tell Your Doctors Before Any Treatment</div>
-      <div class="slide-subtitle">Three critical drug interactions that could cause serious harm at standard doses</div>
+      <div class="slide-title">The Methylation Protocol</div>
+      <div class="slide-subtitle">Food first — then targeted supplements for what diet alone can't fix</div>
       <div class="divider"></div>
 
-      <div class="card card-red">
-        <div class="section-header">
-          <span class="badge badge-red">🔴 CRITICAL</span>
-          <h3 style="margin:0;">Fluorouracil / Capecitabine — Chemotherapy</h3>
-        </div>
-        <ul class="check-list" style="font-size:.88rem;">
-          <li><span class="check-icon">🧬</span>Gene: <span class="gene">DPYD</span> rs17376848 (heterozygous)</li>
-          <li><span class="check-icon">⚗️</span>Effect: Intermediate metabolizer — drug clears ~50% slower than normal</li>
-          <li><span class="check-icon">⚠️</span>Risk: Severe systemic toxicity at standard oncology doses</li>
-          <li><span class="check-icon c-red fw7">→</span><strong>Action: CPIC Level A recommends 50% dose reduction. Must disclose to any oncologist.</strong></li>
-        </ul>
-      </div>
-
-      <div class="card card-orange">
-        <div class="section-header">
-          <span class="badge badge-orange">🟠 HIGH</span>
-          <h3 style="margin:0;">Warfarin — Blood Thinner</h3>
-        </div>
-        <ul class="check-list" style="font-size:.88rem;">
-          <li><span class="check-icon">🧬</span>Genes: <span class="gene">VKORC1</span> hom + <span class="gene">CYP4F2</span> hom + <span class="gene">CYP2C9</span> region het</li>
-          <li><span class="check-icon">⚗️</span>Effect: These variants counteract each other — net result is <strong>unpredictable</strong> with standard dosing tables</li>
-          <li><span class="check-icon c-orange fw7">→</span><strong>Action: Insist on pharmacogenomics-guided dosing. Standard warfarin tables DO NOT apply to you.</strong></li>
-        </ul>
-      </div>
-
-      <div class="card card-orange">
-        <div class="section-header">
-          <span class="badge badge-orange">🟠 HIGH</span>
-          <h3 style="margin:0;">Clopidogrel / Plavix — Heart Drug</h3>
-        </div>
-        <ul class="check-list" style="font-size:.88rem;">
-          <li><span class="check-icon">🧬</span>Gene: <span class="gene">CYP2C19</span> gain-of-function (heterozygous)</li>
-          <li><span class="check-icon">⚗️</span>Effect: Faster drug activation → stronger platelet inhibition → elevated bleeding risk</li>
-          <li><span class="check-icon c-orange fw7">→</span><strong>Action: Disclose to any cardiologist before clopidogrel, prasugrel, or ticagrelor.</strong></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 8: Drug Response -->
-  <div class="slide" data-title="Drug Response" data-sub="Other Medications">
-    <div class="slide-inner">
-      <div class="slide-eyebrow">Pharmacogenomics</div>
-      <div class="slide-title">Drug Response — Other Medications</div>
-      <div class="slide-subtitle">Good to know for future prescriptions — share with relevant specialists</div>
-      <div class="divider"></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Drug Class</th>
-              <th>Gene</th>
-              <th>Effect</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Isoniazid (TB antibiotic)</td>
-              <td><span class="gene">NAT2</span> het</td>
-              <td>Slow acetylator → hepatotoxicity risk</td>
-              <td><span class="c-orange">Disclose to prescriber</span></td>
-            </tr>
-            <tr>
-              <td>Opioids (pain/anesthesia)</td>
-              <td><span class="gene">OPRM1</span> G/G hom</td>
-              <td>Reduced mu-opioid receptor sensitivity</td>
-              <td><span class="c-yellow">Inform anesthesiologist</span></td>
-            </tr>
-            <tr>
-              <td>Naltrexone (addiction Rx)</td>
-              <td><span class="gene">OPRM1</span> G/G hom</td>
-              <td>Better-than-average naltrexone response</td>
-              <td><span class="c-green">Useful advantage</span></td>
-            </tr>
-            <tr>
-              <td>Antidepressants (SSRIs)</td>
-              <td><span class="gene">HTR1A</span> hom</td>
-              <td>Altered 5-HT1A autoreceptor response pattern</td>
-              <td><span class="c-yellow">Monitor with prescriber</span></td>
-            </tr>
-            <tr>
-              <td>Methotrexate</td>
-              <td><span class="gene">MTHFR</span> + <span class="gene">MTRR</span> + others</td>
-              <td>Multiple converging pathway effects</td>
-              <td><span class="c-orange">Disclose MTHFR status</span></td>
-            </tr>
-            <tr>
-              <td>Efavirenz (HIV antiviral)</td>
-              <td><span class="gene">CYP2B6</span> het</td>
-              <td>Intermediate metabolizer → altered exposure</td>
-              <td><span class="c-yellow">Inform if prescribed</span></td>
-            </tr>
-            <tr>
-              <td>Statins (cholesterol)</td>
-              <td><span class="gene">NPC1L1</span> het + others</td>
-              <td>Attenuated LDL-lowering response</td>
-              <td><span class="c-yellow">May need alternative agents</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="callout" style="margin-top:14px;">
-        Keep a printed copy of slides 7–8 in your wallet or phone for any ER visit, surgery, or new specialist appointment.
-      </div>
-    </div>
-  </div>
-
-  <!-- SLIDE 9: Mitochondrial -->
-  <div class="slide" data-title="Mitochondrial & Energy" data-sub="Complex I Bottleneck">
-    <div class="slide-inner">
-      <div class="slide-eyebrow">Energy Metabolism</div>
-      <div class="slide-title">Complex I Bottleneck</div>
-      <div class="slide-subtitle">Why fat works mechanistically better for your specific variants</div>
-      <div class="divider"></div>
       <div class="two-col">
         <div>
-          <div class="card card-orange">
-            <h3>Nuclear ETC Finding</h3>
-            <p style="font-size:.87rem; line-height:1.5; color:var(--muted);">
-              <span class="gene">NDUFS8</span> (likely het, via sister's panel)<br>
-              Complex I Fe-S subunit — moderately reduced electron transfer efficiency
-            </p>
+          <div class="reach-box">
+            <strong>🥩 Foods to Reach For</strong><br>
+            <ul style="margin-top:6px; padding-left:16px; font-size:.83rem; line-height:1.8; color:var(--text);">
+              <li><strong>Beef liver</strong> — highest folate + B12 + B2 in any food</li>
+              <li><strong>Eggs</strong> — choline (reduces SAM drain), B12, B2</li>
+              <li><strong>Oysters &amp; clams</strong> — very high B12</li>
+              <li><strong>Beef &amp; lamb</strong> — B12, B6, natural folate</li>
+              <li><strong>Beets, spinach</strong> — betaine (feeds BHMT backup route)</li>
+              <li><strong>Dark leafy greens (raw)</strong> — natural folate; cooking destroys most of it</li>
+              <li><strong>Whole dairy, sardines</strong> — riboflavin B2</li>
+            </ul>
           </div>
-          <div class="card card-red" style="margin-top:0;">
-            <h3>Compound Burden Stack</h3>
-            <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon c-red">→</span><span class="gene">MTHFR</span> hom → reduced methylfolate → reduced SAM → impaired CoQ10 synthesis</li>
-              <li><span class="check-icon c-red">→</span><span class="gene">MTHFS</span> hom → "trapped" folate → impaired mitochondrial one-carbon</li>
-              <li><span class="check-icon c-red">→</span><span class="gene">MTHFD1</span> hom → reduced 10-formyl-THF → purine synthesis impaired</li>
-              <li><span class="check-icon c-red fw7">→</span><strong>Result: Complex I runs chronically below capacity</strong></li>
+          <div class="avoid-box">
+            <strong>🚫 Foods to Limit or Avoid</strong><br>
+            <ul style="margin-top:6px; padding-left:16px; font-size:.83rem; line-height:1.8; color:var(--text);">
+              <li><strong>Fortified breakfast cereals</strong> — loaded with synthetic folic acid (UMFA)</li>
+              <li><strong>Commercial bread, pasta, flour</strong> — legally required to be fortified with folic acid in the US</li>
+              <li><strong>Energy drinks</strong> — often contain synthetic B vitamins in wrong forms</li>
+              <li><strong>Prenatal/multivitamins with "folic acid"</strong> — need methylfolate version specifically</li>
             </ul>
           </div>
         </div>
         <div>
-          <div class="card card-green">
-            <h3 style="color:var(--green);">The Ketone Solution (Mechanistic)</h3>
-            <div style="background:rgba(34,197,94,.08); border-radius:8px; padding:12px; margin-bottom:10px; font-size:.83rem; font-family:var(--mono); line-height:1.8; color:#86efac;">
-              Fat → β-hydroxybutyrate<br>
-              → acetyl-CoA<br>
-              → TCA cycle<br>
-              → enters at Complex II/III<br>
-              <span style="color:var(--green); font-weight:700;">↑ BYPASSES NDUFS8 Complex I entirely</span>
-            </div>
-            <p style="font-size:.83rem; color:var(--muted); line-height:1.4;">
-              Glucose requires Complex I. Ketones do not. Your advantage on a fat-based diet is mechanistically specific to your genetic variants.
-            </p>
-          </div>
-          <div class="card card-blue" style="margin-top:0;">
-            <h3>Targeted Support</h3>
-            <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day</li>
-              <li><span class="check-icon">✅</span>Acetyl-L-Carnitine 500–1000 mg/day</li>
-              <li><span class="check-icon">✅</span>Riboflavin (B2) — Complex I FAD cofactor</li>
-              <li><span class="check-icon">✅</span>Magnesium — ATP synthesis cofactor</li>
+          <div class="card card-blue">
+            <h3>Supplements That Fill the Gaps Diet Can't</h3>
+            <p style="font-size:.78rem; color:var(--muted); margin-bottom:10px;">Diet helps, but certain impairments can't be fully compensated by food volume alone:</p>
+            <ul class="supp-list" style="padding:0;">
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">L-Methylfolate (5-MTHF)</strong> — bypasses the MTHFR block entirely; diet can't</div>
+              </li>
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">Folinic Acid</strong> — bypasses the MTHFS "folate trap" that no food can unlock</div>
+              </li>
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">Sublingual Methylcobalamin</strong> — bypasses GIF absorption &amp; compensates for MTRR recycling failure; no dietary volume of B12 fully covers this</div>
+              </li>
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">Riboflavin B2</strong> (25–50 mg) — therapeutic dose needed is hard to reach from food alone</div>
+              </li>
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">TMG/Betaine</strong> (1–3 g) — beets help, but not at therapeutic dose</div>
+              </li>
+              <li style="background:transparent; border:none; padding:5px 0;">
+                <span class="supp-icon">💊</span>
+                <div><strong class="c-green">P5P (active B6)</strong> — lowers homocysteine via transsulfuration; supplement-only range</div>
+              </li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="callout">
-        "Your advantage on a fat-based diet is not general — it is mechanistically tailored to your specific genetic variants."
+      <div class="callout" style="margin-top:6px;">
+        Eggs, liver, and beets cover a lot of ground. The supplements exist to handle what your specific genetic blocks make impossible to fully fix through food.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 10: ATG16L1 -->
-  <div class="slide" data-title="ATG16L1 — Autophagy" data-sub="Fasting Is Therapeutic">
+  <!-- SLIDE 7: Energy / Mitochondrial — PROMOTED & EXPANDED -->
+  <div class="slide" data-title="Mitochondrial & Energy" data-sub="Complex I Bottleneck">
     <div class="slide-inner">
-      <div class="slide-eyebrow">Immune & Cellular Maintenance</div>
+      <div class="slide-eyebrow">Energy Metabolism — Priority Finding</div>
+      <div class="slide-title">Why Your Energy System Has a Built-In Bottleneck</div>
+      <div class="slide-subtitle">Three independent genetic factors converge on the same chokepoint in your mitochondria</div>
+      <div class="divider"></div>
+
+      <div class="card card-red" style="margin-bottom:12px;">
+        <h3>The Three-Way Compound Burden</h3>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li>
+            <span class="check-icon c-red">1</span>
+            <div><strong>MTHFR hom → reduced SAM → impaired CoQ10 synthesis.</strong> CoQ10 isn't just an antioxidant — it's the electron carrier that shuttles electrons through the mitochondrial chain. Making CoQ10 requires a methylation step. Your MTHFR block means that step runs at ~30% capacity.</div>
+          </li>
+          <li>
+            <span class="check-icon c-red">2</span>
+            <div><strong>MTHFD1 hom → mitochondria can't run their own folate loop.</strong> This directly impairs mitochondrial one-carbon metabolism — the internal supply chain your mitochondria need to build their own components. They're running a constrained operation from the inside.</div>
+          </li>
+          <li>
+            <span class="check-icon c-red">3</span>
+            <div><strong>NDUFS8 (likely het, via sister's panel) — Complex I structural subunit reduced.</strong> Complex I is where glucose-derived electrons enter the mitochondrial chain. This variant means the iron-sulfur cluster at that entry point has reduced electron transfer efficiency.</div>
+          </li>
+        </ul>
+        <div class="callout red-callout" style="margin-top:10px; font-size:.85rem;">
+          Result: Complex I runs chronically below capacity — impaired from upstream supply (CoQ10, folate), from inside (MTHFD1), and structurally (NDUFS8). These hit from three different angles simultaneously.
+        </div>
+      </div>
+
+      <div class="card card-blue" style="margin-bottom:12px;">
+        <h3>What "Chronically Below Capacity" Actually Feels Like</h3>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon">→</span>Energy that functions but doesn't feel effortless — you can do things, but recovery takes longer than expected</li>
+          <li><span class="check-icon">→</span>Post-exercise fatigue disproportionate to the effort — your mitochondria take longer to reload</li>
+          <li><span class="check-icon">→</span>Cognitive stamina limits — the brain is the highest per-cell energy consumer; extended focus feels more draining than it should</li>
+          <li><span class="check-icon">→</span>Morning sluggishness despite adequate sleep — overnight repair is energy-intensive; waking tired fits this pattern</li>
+        </ul>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="card card-green">
+            <h3 style="color:var(--green);">Why Fat Works Better (Mechanistically)</h3>
+            <div style="background:rgba(34,197,94,.08); border-radius:8px; padding:10px; margin-bottom:10px; font-size:.82rem; font-family:var(--mono); line-height:1.9; color:#86efac;">
+              Fat → β-hydroxybutyrate<br>
+              → acetyl-CoA → TCA cycle<br>
+              → enters at Complex II/III<br>
+              <span style="color:var(--green); font-weight:700;">↑ BYPASSES Complex I entirely</span>
+            </div>
+            <p style="font-size:.82rem; color:var(--muted); line-height:1.4;">
+              Glucose must go through Complex I. Ketones do not. Your advantage on fat is not general — it specifically routes around your structural and functional Complex I impairment.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="card card-blue">
+            <h3>Targeted Mitochondrial Support</h3>
+            <ul class="check-list" style="font-size:.83rem;">
+              <li><span class="check-icon">✅</span><strong>CoQ10 ubiquinol</strong> 100–200 mg/day — replenishes what methylation can't synthesize</li>
+              <li><span class="check-icon">✅</span><strong>Acetyl-L-Carnitine</strong> 500–1000 mg/day — shuttles fatty acids into mitochondria for Complex II/III fuel</li>
+              <li><span class="check-icon">✅</span><strong>Riboflavin B2</strong> — Complex I FAD cofactor; also helps MTHFR (double win)</li>
+              <li><span class="check-icon">✅</span><strong>Magnesium</strong> — required cofactor for ATP synthesis itself</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7b: Energy — Dietary Levers -->
+  <div class="slide" data-title="Energy: Dietary Levers" data-sub="Options Beyond Full Ketosis">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Energy Metabolism — Continued</div>
+      <div class="slide-title">Your Dietary Options for Energy</div>
+      <div class="slide-subtitle">Full ketosis is the mechanistic optimum — but there are other effective approaches if that's not where you are</div>
+      <div class="divider"></div>
+
+      <div class="card card-green" style="margin-bottom:12px;">
+        <h3 style="color:var(--green);">Option A: Full Ketosis (Best Mechanistically)</h3>
+        <p style="font-size:.86rem; color:var(--muted); line-height:1.5;">Dietary fat &gt;70%, carbs &lt;30g/day. Produces ketones that bypass Complex I entirely. Your genetic advantage on fat is most pronounced here. Best for sustained cognitive output and steady energy without crashes.</p>
+      </div>
+
+      <div class="card card-blue" style="margin-bottom:12px;">
+        <h3>Option B: Strategic Carb Timing (If Not Going Full Keto)</h3>
+        <ul class="check-list" style="font-size:.85rem;">
+          <li><span class="check-icon">✅</span><strong>Post-workout carbs only</strong> — after resistance training, muscle uptake is insulin-independent and rapid. Your Complex I handles the brief burst; it's the sustained load that creates problems.</li>
+          <li><span class="check-icon">✅</span><strong>Fat-dominant meals outside workout windows</strong> — breakfast and lunch as fat + protein; carbs at dinner or post-workout if used at all</li>
+          <li><span class="check-icon">✅</span><strong>Fasting before cognitive work</strong> — even an overnight fast puts you in a mild ketogenic state; brain runs cleaner</li>
+          <li><span class="check-icon">✅</span><strong>Protein adequacy</strong> — amino acids (glutamine, leucine) support alternative energy paths and spare glucose</li>
+        </ul>
+      </div>
+
+      <div class="avoid-box">
+        <strong>🚫 Combinations That Hit Hardest for Your Genetics</strong>
+        <ul style="margin-top:8px; padding-left:16px; font-size:.83rem; line-height:1.9; color:var(--text);">
+          <li><strong>High carb + high stress</strong> — cortisol drives glucose oxidation exactly when your Complex I is already stressed by cortisol's own energy demands. Double burden.</li>
+          <li><strong>High carb + poor sleep</strong> — sleep deprivation impairs mitochondrial efficiency baseline. Adding glucose dependency compounds this significantly.</li>
+          <li><strong>High carb + sustained endurance cardio</strong> — steady-state aerobic exercise is the most Complex I-dependent activity. This is where fat-adapted athletes have the clearest genetic advantage over you in a glucose-fueled state.</li>
+          <li><strong>High sugar + stimulants (caffeine)</strong> — stimulant-driven performance on a glucose substrate is borrowed energy. Fat-adapted caffeine use is more stable and sustainable for your biology.</li>
+        </ul>
+      </div>
+
+      <div class="callout green-callout" style="margin-top:12px;">
+        Resistance training builds more metabolically flexible muscle tissue. More muscle = better fat oxidation capacity even between sessions. This is a leverage point regardless of which dietary approach you take.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: ATG16L1 -->
+  <div class="slide" data-title="ATG16L1 — Cellular Cleanup" data-sub="Fasting Is Therapeutic">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Immune &amp; Cellular Maintenance</div>
       <div class="slide-title">Fasting Is Not Optional — It's Therapeutic</div>
-      <div class="slide-subtitle">ATG16L1 double-homozygous — autophagy severely impaired at the structural level</div>
+      <div class="slide-subtitle">Your cellular cleanup system is structurally impaired — fasting is the primary lever to compensate</div>
       <div class="divider"></div>
       <div class="card card-red">
         <div class="section-header">
           <span class="badge badge-red">🔴 DOUBLE-HOM</span>
-          <h3 style="margin:0;"><span class="gene">ATG16L1</span> — rs2241880 +/+ AND rs10210302 +/+</h3>
+          <h3 style="margin:0;">Cellular Cleanup Gene — Both copies, both variants impaired</h3>
         </div>
-        <p style="font-size:.87rem; color:var(--muted); line-height:1.5;">ATG16L1 forms the autophagosome complex responsible for intracellular cleanup, damaged organelle removal, and gut immune regulation.</p>
+        <p style="font-size:.87rem; color:var(--muted); line-height:1.5;">Your body runs a process called autophagy — essentially cellular housekeeping where cells identify, dismantle, and recycle damaged components before they cause problems. Think of it as a garbage collection system. The ATG16L1 protein is a structural piece of the machinery that does this work. You have two different genetic variants in this gene, and for both, you inherited the impaired version from <em>both</em> parents — so both copies are affected. The machinery runs below spec.</p>
+        <p class="footnote">Variants: rs2241880 (T300A) and rs10210302, both homozygous (+/+)</p>
       </div>
       <div class="two-col" style="margin-top:12px;">
         <div>
           <div class="card card-red">
-            <h3>What Impaired Autophagy Means</h3>
+            <h3>What Impaired Cellular Cleanup Means</h3>
             <ul class="check-list" style="font-size:.85rem;">
-              <li><span class="check-icon c-red">→</span>Reduced clearance of damaged mitochondria</li>
-              <li><span class="check-icon c-red">→</span>Elevated NOD2-mediated gut inflammation</li>
-              <li><span class="check-icon c-red">→</span>Crohn's-type immune dysregulation susceptibility</li>
+              <li><span class="check-icon c-red">→</span>Damaged mitochondria linger longer instead of being recycled — compounds the energy problems from slide 7</li>
+              <li><span class="check-icon c-red">→</span>Gut immune regulation impaired — elevated intestinal inflammation baseline</li>
+              <li><span class="check-icon c-red">→</span>Susceptibility to Crohn's-type immune dysregulation</li>
               <li><span class="check-icon c-red">→</span>Potential subclinical intestinal permeability</li>
             </ul>
           </div>
@@ -1022,23 +1199,22 @@
           <div class="card card-green">
             <h3>Your Countermeasures</h3>
             <ul class="check-list" style="font-size:.85rem;">
-              <li><span class="check-icon">🔴</span><strong>12–16 hr daily fast</strong> — non-negotiable at double-hom</li>
-              <li><span class="check-icon">🟠</span>Monthly 24–36 hr extended fast — deeper clearance</li>
-              <li><span class="check-icon">✅</span>Low-carb/carnivore — reduces inflammatory substrates</li>
-              <li><span class="check-icon">✅</span>Curcumin 500–1000 mg/day (with fat) — AMPK activator</li>
-              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day</li>
-              <li><span class="check-icon">✅</span>Acetyl-L-Carnitine 500–1000 mg/day</li>
+              <li><span class="check-icon">🔴</span><strong>12–16 hr daily fast</strong> — fasting is the strongest known trigger for autophagy; non-negotiable at double-hom</li>
+              <li><span class="check-icon">🟠</span>Monthly 24–36 hr extended fast — drives deeper cellular cleanup</li>
+              <li><span class="check-icon">✅</span>Low-carb/carnivore — reduces inflammatory substrates that tax the cleanup system</li>
+              <li><span class="check-icon">✅</span>Curcumin 500–1000 mg/day (with fat) — AMPK activator, mimics some fasting signals</li>
+              <li><span class="check-icon">✅</span>CoQ10 ubiquinol — helps clear damaged mitochondria faster</li>
             </ul>
           </div>
         </div>
       </div>
       <div class="callout red-callout" style="margin-top:12px;">
-        Daily fasting is not a weight loss strategy here — it is the primary pharmacological intervention for a confirmed autophagy structural deficit.
+        Daily fasting is not a weight loss strategy here — it is the primary pharmacological intervention for a confirmed cellular cleanup deficit.
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 11: Athletic Profile -->
+  <!-- SLIDE 10: Athletic Profile -->
   <div class="slide" data-title="Athletic Profile" data-sub="Performance Genetics">
     <div class="slide-inner">
       <div class="slide-eyebrow">Performance Genetics</div>
@@ -1087,7 +1263,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 12: Brain/Mood -->
+  <!-- SLIDE 11: Brain/Mood -->
   <div class="slide" data-title="Brain, Mood & Behavior" data-sub="Neurological Landscape">
     <div class="slide-inner">
       <div class="slide-eyebrow">Neurogenomics</div>
@@ -1111,16 +1287,14 @@
       <div class="two-col" style="margin-top:12px;">
         <div>
           <div class="card card-blue">
-            <h3 style="font-size:.95rem;"><span class="gene">OPRM1</span> Asn40Asp (G/G hom)</h3>
-            <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon">🔬</span>Reduced mu-opioid receptor sensitivity</li>
-              <li><span class="check-icon c-orange">⚠️</span>Standard opioid doses may be less effective</li>
-              <li><span class="check-icon c-green">✅</span>G/G responds much better to naltrexone for behavioral compulsions</li>
-            </ul>
+            <h3 style="font-size:.95rem;">Opioid Receptor — Reduced Sensitivity</h3>
+            <p style="font-size:.82rem; color:var(--muted); line-height:1.4; margin-bottom:8px;">You carry a variant that reduces sensitivity at mu-opioid receptors — the brain's pain and reward signaling system. Standard opioid doses may be less effective for pain management. The upside: this genotype responds unusually well to naltrexone (used for behavioral compulsions and addiction).</p>
+            <p class="footnote">Gene: OPRM1 Asn40Asp (G/G hom)</p>
           </div>
           <div class="card card-blue" style="margin-top:0;">
-            <h3 style="font-size:.95rem;"><span class="gene">HTR1A</span> (homozygous)</h3>
-            <p style="font-size:.83rem; color:var(--muted); line-height:1.4;">5-HT1A serotonin autoreceptor altered pattern. Affects antidepressant response if SSRIs ever prescribed.</p>
+            <h3 style="font-size:.95rem;">Serotonin Autoreceptor</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.4;">Altered 5-HT1A autoreceptor pattern. Most relevant if SSRIs ever prescribed — affects response pattern and optimal dosing approach.</p>
+            <p class="footnote">Gene: HTR1A (homozygous)</p>
           </div>
         </div>
         <div>
@@ -1138,56 +1312,47 @@
     </div>
   </div>
 
-  <!-- SLIDE 13: Immune -->
+  <!-- SLIDE 12: Immune — more approachable -->
   <div class="slide" data-title="Immune & Inflammation" data-sub="MPO, SERPINA1, Complement">
     <div class="slide-inner">
       <div class="slide-eyebrow">Immunogenomics</div>
       <div class="slide-title">Immune System &amp; Inflammation</div>
-      <div class="slide-subtitle">MPO neutrophil function, alpha-1-antitrypsin, and complement system variants</div>
+      <div class="slide-subtitle">Three immune variants — what each one actually means in plain terms</div>
       <div class="divider"></div>
 
       <div class="card card-orange">
         <div class="section-header">
-          <span class="badge badge-orange">🟠 DAMAGING (3/3 ALGORITHMS)</span>
-          <h3 style="margin:0;"><span class="gene">MPO</span> Arg569Trp (heterozygous)</h3>
+          <span class="badge badge-orange">🟠 CONFIRMED DAMAGING</span>
+          <h3 style="margin:0;">Neutrophil Bactericidal Weapon — Partial Reduction</h3>
         </div>
-        <ul class="check-list" style="font-size:.85rem;">
-          <li><span class="check-icon">🔬</span>SIFT 0.005 + PolyPhen-2 1.000/1.000 = confirmed damaging (max confidence across all three algorithms)</li>
-          <li><span class="check-icon">📋</span>ClinVar: Pathogenic / Likely pathogenic</li>
-          <li><span class="check-icon c-orange">⚠️</span>Effect: Partial myeloperoxidase deficiency — reduced neutrophil oxidative burst</li>
-          <li><span class="check-icon c-muted">ℹ️</span>Practical: Usually asymptomatic; may take longer to clear certain bacterial infections</li>
-          <li><span class="check-icon c-green">✅</span>Bonus: MPO variant associated with <em>reduced</em> Alzheimer's risk per ClinVar data</li>
+        <p style="font-size:.86rem; color:var(--muted); line-height:1.5; margin-bottom:10px;">Your neutrophils (the white blood cells that are first responders to infection) use an enzyme called myeloperoxidase — essentially a biological bleach they spray at bacteria to kill them. This variant reduces that enzyme's activity by roughly 50%. You are not immunodeficient. You can still fight infections. But you may take a bit longer to clear certain bacterial infections than average, and you should mention this if you're fighting a persistent bacterial illness.</p>
+        <ul class="check-list" style="font-size:.84rem;">
+          <li><span class="check-icon c-green">✅</span><strong>Upside:</strong> This MPO variant is associated with <em>reduced</em> Alzheimer's risk per ClinVar data — less oxidative burden from MPO in the brain over a lifetime</li>
+          <li><span class="check-icon c-orange">⚠️</span>ClinVar: Pathogenic / Likely pathogenic (for partial deficiency)</li>
         </ul>
+        <p class="footnote">Gene: MPO Arg569Trp (heterozygous) — SIFT 0.005, PolyPhen-2 1.000/1.000, confirmed damaging across all three algorithms</p>
       </div>
 
       <div class="two-col" style="margin-top:12px;">
         <div>
           <div class="card card-yellow">
-            <h3 style="font-size:.95rem;"><span class="gene">SERPINA1</span> S allele (MS genotype)</h3>
-            <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon">🫁</span>Alpha-1-antitrypsin at ~80% of normal</li>
-              <li><span class="check-icon c-green">✅</span>MS genotype is clinically mild — disease risk primarily with ZZ or SZ</li>
-              <li><span class="check-icon c-orange">⚠️</span>Smoking or heavy occupational dust exposure would tip the balance significantly</li>
-              <li><span class="check-icon">👁️</span>Monitor if chronic respiratory symptoms develop</li>
-            </ul>
+            <h3 style="font-size:.95rem;">Lung &amp; Liver Protective Protein — Slightly Reduced</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.5; margin-bottom:6px;">Alpha-1-antitrypsin is a protein that protects your lungs and liver from being damaged by your own immune system's enzymes. Your MS genotype puts you at about 80% of normal levels — enough to be fine under normal conditions. The key risk: smoking or heavy long-term chemical/dust exposure would push you into the zone where lung damage becomes a real concern. Under normal lifestyle, this is a "watch and know" finding, not an active problem.</p>
+            <p class="footnote">Gene: SERPINA1 S allele (MS genotype)</p>
           </div>
         </div>
         <div>
           <div class="card card-yellow">
-            <h3 style="font-size:.95rem;"><span class="gene">CFH</span> His402Tyr (heterozygous)</h3>
-            <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon">👁️</span>Major age-related macular degeneration (AMD) susceptibility variant</li>
-              <li><span class="check-icon c-orange">⚠️</span>Het = ~2–3× lifetime AMD risk increase vs. population</li>
-              <li><span class="check-icon c-blue">ℹ️</span>Also modifies AMD drug response (bevacizumab vs. ranibizumab)</li>
-              <li><span class="check-icon c-green">→</span>Action: Eye exams with retinal assessment beginning at age 50</li>
-            </ul>
+            <h3 style="font-size:.95rem;">Eye Immune Regulation — AMD Risk</h3>
+            <p style="font-size:.83rem; color:var(--muted); line-height:1.5; margin-bottom:6px;">Complement Factor H helps keep your immune system from accidentally damaging your own retina. This variant is one of the strongest known genetic risk factors for age-related macular degeneration (AMD) — the leading cause of vision loss in older adults. Heterozygous puts lifetime AMD risk at roughly 2–3× the population average. This doesn't mean AMD is inevitable, but annual eye exams with retinal imaging from age 50 onward are warranted.</p>
+            <p class="footnote">Gene: CFH His402Tyr (heterozygous) — also modifies AMD drug response (bevacizumab vs. ranibizumab)</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SLIDE 14: Disease Risk -->
+  <!-- SLIDE 13: Disease Risk -->
   <div class="slide" data-title="Disease Risk" data-sub="Know Your Terrain">
     <div class="slide-inner">
       <div class="slide-eyebrow">Susceptibility Landscape</div>
@@ -1217,7 +1382,7 @@
             <h3>Eye &amp; Vision</h3>
             <ul class="check-list" style="font-size:.82rem;">
               <li><span class="check-icon c-yellow">●</span><span class="gene">LOXL1</span> het — exfoliation syndrome → secondary glaucoma risk</li>
-              <li><span class="check-icon c-yellow">●</span><span class="gene">CFH</span> het — AMD (see slide 13)</li>
+              <li><span class="check-icon c-yellow">●</span><span class="gene">CFH</span> het — AMD (see slide 12)</li>
             </ul>
           </div>
           <div class="card card-yellow" style="margin-top:0;">
@@ -1235,7 +1400,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 15: Cancer Screen -->
+  <!-- SLIDE 14: Cancer Screen -->
   <div class="slide" data-title="Cancer Gene Screen" data-sub="What Was Checked">
     <div class="slide-inner">
       <div class="slide-eyebrow">Hereditary Cancer Panel</div>
@@ -1280,7 +1445,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 16: LRP5 Good News -->
+  <!-- SLIDE 15: LRP5 Good News -->
   <div class="slide" data-title="LRP5 Worth Disease" data-sub="The Good News">
     <div class="slide-inner">
       <div class="slide-eyebrow">Structural Finding — Positive</div>
@@ -1329,7 +1494,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 17: Talk to Doctors -->
+  <!-- SLIDE 16: Talk to Doctors -->
   <div class="slide" data-title="Talk to Your Doctors" data-sub="What to Carry">
     <div class="slide-inner">
       <div class="slide-eyebrow">Medical Disclosure Guide</div>
@@ -1341,7 +1506,7 @@
           <div class="action-block" style="border-left: 3px solid var(--red);">
             <h4 style="color:var(--red);">🔴 Always Disclose (Any Provider)</h4>
             <ol>
-              <li><span class="gene">DPYD</span> het — fluorouracil/capecitabine 50% dose reduction required</li>
+              <li><span class="gene">DPYD</span> het — fluorouracil/capecitabine 50% dose reduction required (see appendix)</li>
               <li><span class="gene">VKORC1</span> hom + <span class="gene">CYP4F2</span> hom — warfarin standard tables don't apply</li>
               <li><span class="gene">CYP2C19</span> gain-of-function — clopidogrel/platelet drug bleeding risk</li>
             </ol>
@@ -1373,7 +1538,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 18: Action List -->
+  <!-- SLIDE 17: Action List -->
   <div class="slide" data-title="Priority Action List" data-sub="What to Do — In Order">
     <div class="slide-inner">
       <div class="slide-eyebrow">Your Roadmap</div>
@@ -1390,6 +1555,7 @@
               <li>Add <strong>riboflavin B2</strong> — 25–50 mg/day</li>
               <li>Add <strong>TMG/betaine</strong> — 1–3 g/day</li>
               <li>Lock in <strong>12–16 hour daily fasting window</strong> — therapeutic requirement</li>
+              <li>Add <strong>CoQ10 ubiquinol</strong> — 100–200 mg/day</li>
             </ol>
           </div>
           <div class="action-block" style="border-left: 3px solid var(--yellow); margin-top:0;">
@@ -1423,6 +1589,69 @@
     </div>
   </div>
 
+  <!-- SLIDE 18: Pharmacogenomics — APPENDIX -->
+  <div class="slide" data-title="Appendix: Drug Interactions" data-sub="Tell Your Doctors — Critical Three">
+    <div class="slide-inner">
+      <div class="slide-eyebrow appendix">Appendix — Pharmacogenomics</div>
+      <div class="slide-title">Drug Interactions — Tell Your Doctors</div>
+      <div class="slide-subtitle">Not relevant to daily health practice — but critical to disclose before any treatment</div>
+      <div class="divider"></div>
+
+      <div class="card card-red">
+        <div class="section-header">
+          <span class="badge badge-red">🔴 CRITICAL</span>
+          <h3 style="margin:0;">Fluorouracil / Capecitabine — Chemotherapy</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">⚗️</span>Intermediate metabolizer — drug clears ~50% slower than normal</li>
+          <li><span class="check-icon">⚠️</span>Risk: Severe systemic toxicity at standard oncology doses</li>
+          <li><span class="check-icon c-red fw7">→</span><strong>CPIC Level A recommends 50% dose reduction. Must disclose to any oncologist.</strong></li>
+        </ul>
+        <p class="footnote">Gene: DPYD rs17376848 (heterozygous)</p>
+      </div>
+
+      <div class="card card-orange">
+        <div class="section-header">
+          <span class="badge badge-orange">🟠 HIGH</span>
+          <h3 style="margin:0;">Warfarin — Blood Thinner</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">⚗️</span>Multiple variants counteract each other — net result is <strong>unpredictable</strong> with standard dosing tables</li>
+          <li><span class="check-icon c-orange fw7">→</span><strong>Insist on pharmacogenomics-guided dosing. Standard warfarin tables DO NOT apply.</strong></li>
+        </ul>
+        <p class="footnote">Genes: VKORC1 hom + CYP4F2 hom + CYP2C9 region het</p>
+      </div>
+
+      <div class="card card-orange">
+        <div class="section-header">
+          <span class="badge badge-orange">🟠 HIGH</span>
+          <h3 style="margin:0;">Clopidogrel / Plavix — Heart Drug</h3>
+        </div>
+        <ul class="check-list" style="font-size:.88rem;">
+          <li><span class="check-icon">⚗️</span>Faster drug activation → stronger platelet inhibition → elevated bleeding risk</li>
+          <li><span class="check-icon c-orange fw7">→</span><strong>Disclose to any cardiologist before clopidogrel, prasugrel, or ticagrelor.</strong></li>
+        </ul>
+        <p class="footnote">Gene: CYP2C19 gain-of-function (heterozygous)</p>
+      </div>
+
+      <div class="card" style="margin-top:8px;">
+        <h3 style="font-size:.9rem; color:var(--muted);">Other Notable Drug Responses</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Drug</th><th>Effect</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>Isoniazid (TB)</td><td>Slow acetylator — hepatotoxicity risk</td><td><span class="c-orange">Disclose</span></td></tr>
+              <tr><td>Opioids</td><td>Reduced mu-opioid sensitivity</td><td><span class="c-yellow">Inform anesthesiologist</span></td></tr>
+              <tr><td>Naltrexone</td><td>Better-than-average response</td><td><span class="c-green">Useful advantage</span></td></tr>
+              <tr><td>Methotrexate</td><td>Multiple folate pathway effects</td><td><span class="c-orange">Disclose MTHFR status</span></td></tr>
+              <tr><td>Statins</td><td>Attenuated LDL-lowering response</td><td><span class="c-yellow">May need alternatives</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /deck -->
 
 <script>
@@ -1432,7 +1661,6 @@
   const slides = Array.from(document.querySelectorAll('.slide'));
   const total = slides.length;
   let current = 0;
-  let prevIdx = -1;
   let overviewOpen = false;
 
   const progressBar = document.getElementById('progress-bar');
@@ -1440,6 +1668,9 @@
   const overviewEl = document.getElementById('overview');
   const overviewGrid = document.getElementById('overview-grid');
   const kbHint = document.getElementById('kb-hint');
+
+  // Update static counter to match actual slide count
+  counter.textContent = '1 / ' + total;
 
   // Build overview thumbnails
   slides.forEach((slide, i) => {
@@ -1458,7 +1689,6 @@
   function updateUI() {
     counter.textContent = (current + 1) + ' / ' + total;
     progressBar.style.width = ((current + 1) / total * 100) + '%';
-    // Overview thumbs
     document.querySelectorAll('.overview-thumb').forEach((t, i) => {
       t.classList.toggle('active-thumb', i === current);
     });
@@ -1473,17 +1703,13 @@
     const oldSlide = slides[current];
     const newSlide = slides[idx];
 
-    // Exit old
     oldSlide.classList.remove('active');
-    oldSlide.classList.add(direction > 0 ? 'exit-left' : 'exit-left');
-    // Actually use a micro-timeout to let the browser paint before removing
+    oldSlide.classList.add('exit-left');
     setTimeout(() => { oldSlide.classList.remove('exit-left'); }, 450);
 
-    // Enter new
     newSlide.style.transform = direction > 0 ? 'translateX(30px)' : 'translateX(-30px)';
     newSlide.style.opacity = '0';
     newSlide.classList.add('active');
-    // Force reflow
     void newSlide.offsetWidth;
     newSlide.style.transform = '';
     newSlide.style.opacity = '';
@@ -1507,7 +1733,6 @@
     if (overviewOpen) closeOverview(); else openOverview();
   }
 
-  // Keyboard
   document.addEventListener('keydown', function (e) {
     if (overviewOpen) {
       if (e.key === 'Escape' || e.key.toLowerCase() === 'o') closeOverview();
@@ -1533,17 +1758,13 @@
           document.exitFullscreen && document.exitFullscreen();
         }
         break;
-      case 'Escape':
-        break;
     }
   });
 
-  // Nav buttons
   document.getElementById('nav-prev').addEventListener('click', prev);
   document.getElementById('nav-next').addEventListener('click', next);
   document.getElementById('overview-close').addEventListener('click', closeOverview);
 
-  // Touch swipe
   let touchStartX = 0;
   let touchStartY = 0;
   document.addEventListener('touchstart', function (e) {
@@ -1559,10 +1780,8 @@
     }
   }, { passive: true });
 
-  // Hide keyboard hint after a few seconds
   setTimeout(() => { kbHint.style.opacity = '0'; }, 5000);
 
-  // Init
   updateUI();
   progressBar.style.width = (1 / total * 100) + '%';
 
