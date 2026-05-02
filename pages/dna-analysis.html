@@ -519,7 +519,7 @@
 <div id="progress-bar"></div>
 
 <!-- Slide Counter -->
-<div id="slide-counter">1 / 18</div>
+<div id="slide-counter">1 / 19</div>
 
 <!-- Nav Buttons -->
 <button class="nav-btn" id="nav-prev" aria-label="Previous">&#8592;</button>
@@ -1007,10 +1007,12 @@
           <div class="card card-blue" style="margin-top:0;">
             <h3>Targeted Support</h3>
             <ul class="check-list" style="font-size:.83rem;">
-              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day</li>
+              <li><span class="check-icon">✅</span>CoQ10 ubiquinol 100–200 mg/day — also clears H2S safely</li>
               <li><span class="check-icon">✅</span>Acetyl-L-Carnitine 500–1000 mg/day</li>
-              <li><span class="check-icon">✅</span>Riboflavin (B2) — Complex I FAD cofactor</li>
+              <li><span class="check-icon">✅</span>Riboflavin (B2) 50–100 mg/day — MTHFR cofactor AND ACAD9 / Complex I assembly</li>
               <li><span class="check-icon">✅</span>Magnesium — ATP synthesis cofactor</li>
+              <li><span class="check-icon">✅</span>MK-4 (K2) 1–5 mg/day — reserve electron carrier, release valve for Complex I backup</li>
+              <li><span class="check-icon">✅</span>Taurine 1–3 g/day — mitochondrial tRNA modification + GABA-sidekick</li>
             </ul>
           </div>
         </div>
@@ -1021,7 +1023,67 @@
     </div>
   </div>
 
-  <!-- SLIDE 10: ATG16L1 -->
+  <!-- SLIDE 10: Sulfur Pathway -->
+  <div class="slide" data-title="Sulfur Pathway" data-sub="The Hidden ETC Toxin Risk">
+    <div class="slide-inner">
+      <div class="slide-eyebrow">Trans-Sulfuration — Masterjohn Lens (New)</div>
+      <div class="slide-title">Sulfur Metabolism — The Missing Piece</div>
+      <div class="slide-subtitle">High sulfur diet + impaired remethylation = more trans-sulfuration flux → sulfite risk</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="card card-orange">
+            <h3>The Pathway</h3>
+            <div style="background:rgba(249,115,22,.06); border-radius:8px; padding:10px; font-size:.78rem; font-family:var(--mono); line-height:1.9; color:#fdba74;">
+              Methionine → SAM → Homocysteine<br>
+              <span style="color:#fb923c; font-weight:700;">(MTHFR hom + BHMT hom: both recycling routes impaired)</span><br>
+              → CBS (WT) → Cystathionine<br>
+              → CTH het → Cysteine + H2S<br>
+              → CoQ10-dependent → Sulfite<br>
+              → Molybdenum/sulfite oxidase → Sulfate ✅
+            </div>
+          </div>
+          <div class="card card-red" style="margin-top:0;">
+            <h3>When This Goes Wrong</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon c-red">→</span><strong>Sulfite</strong> = triple mitochondrial toxin (Masterjohn 2024)</li>
+              <li><span class="check-icon c-red">→</span>Inhibits 2 ETC enzymes directly — hits NDUFS8-impaired Complex I harder</li>
+              <li><span class="check-icon c-red">→</span>Depletes NADPH → oxidative stress → SOD2 het overwhelmed</li>
+              <li><span class="check-icon c-red">→</span>Depletes B vitamins (including riboflavin you depend on)</li>
+              <li><span class="check-icon c-red">→</span>S-sulfocysteine → NMDA overstimulation → anxiety, palpitations, sensory overload</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <div class="card card-blue">
+            <h3>Tyler's Risk Factors</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon c-orange">⚠️</span>Carnivore diet = highest sulfur amino acid load possible</li>
+              <li><span class="check-icon c-orange">⚠️</span><span class="gene">MTHFR</span> hom + <span class="gene">BHMT</span> hom = homocysteine exits forward through CBS, not back to methionine</li>
+              <li><span class="check-icon c-orange">⚠️</span><span class="gene">CTH</span> het (Christine's panel) — trans-sulfuration rate may be altered</li>
+              <li><span class="check-icon c-orange">⚠️</span>Fasting + ketogenic states are catabolic — liberate additional sulfur amino acids from tissue</li>
+              <li><span class="check-icon c-orange">⚠️</span><span class="gene">NDUFS8</span> het + sulfite load = compounded ETC suppression</li>
+            </ul>
+          </div>
+          <div class="card card-green" style="margin-top:0;">
+            <h3>The Fixes</h3>
+            <ul class="check-list" style="font-size:.82rem;">
+              <li><span class="check-icon">🆕</span><strong>Molybdenum 100–300 mcg/day</strong> — sulfite oxidase cofactor (not yet in protocol)</li>
+              <li><span class="check-icon">✅</span>CoQ10 — required for safe H2S → sulfite step</li>
+              <li><span class="check-icon">✅</span>B6 as P5P — CBS/CTH cofactor; sulfite depletes B6</li>
+              <li><span class="check-icon">🆕</span><strong>Taurine 1–3 g/day</strong> — downstream of CTH; may be suboptimal endogenously</li>
+              <li><span class="check-icon c-muted">🧪</span>Urine sulfite strips — cheap home monitor; elevated = sulfite buildup signal</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="callout red-callout">
+        On a carnivore + fasting protocol, sulfur flux is maximized. With both remethylation routes impaired, trans-sulfuration is the dominant homocysteine exit. Molybdenum is the rate-limiting cofactor for safe clearance.
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: ATG16L1 -->
   <div class="slide" data-title="ATG16L1 — Autophagy" data-sub="Fasting Is Therapeutic">
     <div class="slide-inner">
       <div class="slide-eyebrow">Immune & Cellular Maintenance</div>
@@ -1067,7 +1129,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 11: Athletic Profile -->
+  <!-- SLIDE 12: Athletic Profile -->
   <div class="slide" data-title="Athletic Profile" data-sub="Performance Genetics">
     <div class="slide-inner">
       <div class="slide-eyebrow">Performance Genetics</div>
@@ -1116,7 +1178,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 12: Brain/Mood -->
+  <!-- SLIDE 13: Brain/Mood -->
   <div class="slide" data-title="Brain, Mood & Behavior" data-sub="Neurological Landscape">
     <div class="slide-inner">
       <div class="slide-eyebrow">Neurogenomics</div>
@@ -1167,7 +1229,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 13: Immune -->
+  <!-- SLIDE 14: Immune -->
   <div class="slide" data-title="Immune & Inflammation" data-sub="MPO, SERPINA1, Complement">
     <div class="slide-inner">
       <div class="slide-eyebrow">Immunogenomics</div>
@@ -1216,7 +1278,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 14: Disease Risk -->
+  <!-- SLIDE 15: Disease Risk -->
   <div class="slide" data-title="Disease Risk" data-sub="Know Your Terrain">
     <div class="slide-inner">
       <div class="slide-eyebrow">Susceptibility Landscape</div>
@@ -1264,7 +1326,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 15: Cancer Screen -->
+  <!-- SLIDE 16: Cancer Screen -->
   <div class="slide" data-title="Cancer Gene Screen" data-sub="What Was Checked">
     <div class="slide-inner">
       <div class="slide-eyebrow">Hereditary Cancer Panel</div>
@@ -1309,7 +1371,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 16: LRP5 Good News -->
+  <!-- SLIDE 17: LRP5 Good News -->
   <div class="slide" data-title="LRP5 Worth Disease" data-sub="The Good News">
     <div class="slide-inner">
       <div class="slide-eyebrow">Structural Finding — Positive</div>
@@ -1358,7 +1420,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 17: Talk to Doctors -->
+  <!-- SLIDE 18: Talk to Doctors -->
   <div class="slide" data-title="Talk to Your Doctors" data-sub="What to Carry">
     <div class="slide-inner">
       <div class="slide-eyebrow">Medical Disclosure Guide</div>
@@ -1402,7 +1464,7 @@
     </div>
   </div>
 
-  <!-- SLIDE 18: Action List -->
+  <!-- SLIDE 19: Action List -->
   <div class="slide" data-title="Priority Action List" data-sub="What to Do — In Order">
     <div class="slide-inner">
       <div class="slide-eyebrow">Your Roadmap</div>
@@ -1416,9 +1478,12 @@
             <ol>
               <li>Switch all supplements to <strong>methylfolate + folinic acid</strong> — discard folic acid</li>
               <li>Switch B12 to <strong>sublingual methylcobalamin</strong></li>
-              <li>Add <strong>riboflavin B2</strong> — 25–50 mg/day</li>
+              <li>Add <strong>riboflavin B2</strong> — 50–100 mg/day (upgrade: Complex I assembly, not just MTHFR)</li>
               <li>Add <strong>TMG/betaine</strong> — 1–3 g/day</li>
               <li>Lock in <strong>12–16 hour daily fasting window</strong> — therapeutic requirement</li>
+              <li>Add <strong>Molybdenum</strong> — 100–300 mcg/day (sulfite oxidase cofactor — <em>new addition</em>)</li>
+              <li>Add <strong>Taurine</strong> — 1–3 g/day (mitochondria + GABA — <em>new addition</em>)</li>
+              <li>Add <strong>MK-4 (K2)</strong> — 1–5 mg/day (reserve ETC carrier — <em>new addition</em>)</li>
             </ol>
           </div>
           <div class="action-block" style="border-left: 3px solid var(--yellow); margin-top:0;">
@@ -1444,7 +1509,7 @@
           <div class="card card-green" style="margin-top:12px; padding:14px 16px;">
             <h3 style="font-size:.9rem; color:var(--green);">Bottom Line</h3>
             <p style="font-size:.83rem; color:var(--muted); line-height:1.5;">
-              The methylation protocol and fasting window are the two highest-leverage interventions. Start there. Most of the disease risk in this report is modifiable by the same two interventions: ancestral diet + methylation support.
+              The methylation protocol and fasting window are the two highest-leverage interventions. Start there. The sulfur pathway additions (molybdenum, taurine, MK-4) address a second tier of risk specific to the carnivore + high-meat + fasting lifestyle. Most of the disease risk in this report is modifiable by the same core interventions: ancestral diet + methylation support + fasting.
             </p>
           </div>
         </div>
