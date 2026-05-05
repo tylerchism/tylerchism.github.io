@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tyler Chism — Biochemical Reaction Mechanisms</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f172a; --card: #1e293b; --card2: #273548; --border: #334155;
+    --text: #e2e8f0; --muted: #94a3b8;
+    --red: #ef4444; --red-dim: rgba(239,68,68,0.15);
+    --orange: #f97316; --orange-dim: rgba(249,115,22,0.15);
+    --yellow: #eab308; --yellow-dim: rgba(234,179,8,0.15);
+    --green: #22c55e; --green-dim: rgba(34,197,94,0.15);
+    --blue: #3b82f6; --blue-dim: rgba(59,130,246,0.15);
+    --purple: #8b5cf6;
+    --mono: "Courier New", Courier, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; user-select: none; }
+
+  #progress-bar { position: fixed; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--purple)); transition: width 0.4s cubic-bezier(.4,0,.2,1); z-index: 100; }
+  #slide-counter { position: fixed; top: max(18px, env(safe-area-inset-top, 0px)); right: 22px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .05em; z-index: 100; background: rgba(15,23,42,0.7); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(6px); }
+  .nav-btn { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(30,41,59,0.8); border: 1px solid var(--border); color: var(--muted); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; z-index: 100; transition: all .2s; backdrop-filter: blur(4px); }
+  .nav-btn:hover { background: var(--card2); color: var(--text); border-color: var(--blue); }
+  #nav-prev { left: 14px; }
+  #nav-next { right: 14px; }
+
+  #deck { width: 100%; height: 100%; position: relative; }
+  .slide { position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: center; padding: 60px 70px 50px; opacity: 0; pointer-events: none; transition: opacity 0.45s cubic-bezier(.4,0,.2,1), transform 0.45s cubic-bezier(.4,0,.2,1); transform: translateX(30px); overflow-y: auto; overflow-x: hidden; }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .slide.exit-left { opacity: 0; transform: translateX(-30px); }
+  .slide-inner { width: 100%; max-width: 920px; margin: auto; }
+
+  .slide-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.2; margin-bottom: 6px; background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .slide-subtitle { font-size: clamp(.82rem, 1.6vw, 1rem); color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .slide-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--blue) 0%, transparent 100%); margin-bottom: 20px; opacity: .5; }
+
+  .diagram-wrap { background: rgba(30,41,59,0.6); border: 1px solid var(--border); border-radius: 12px; padding: 16px 12px; margin-bottom: 14px; overflow-x: auto; }
+  .diagram-wrap svg { display: block; width: 100%; max-width: 100%; height: auto; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: .76rem; color: var(--muted); }
+  .legend-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+
+  .caption-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+  .caption-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: .8rem; line-height: 1.5; }
+  .cc-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; margin-bottom: 3px; }
+  .cc-red { color: var(--red); }
+  .cc-orange { color: var(--orange); }
+  .cc-yellow { color: var(--yellow); }
+  .cc-green { color: var(--green); }
+  .cc-blue { color: var(--blue); }
+  .cc-purple { color: var(--purple); }
+  .cc-muted { color: var(--muted); }
+
+  #overview { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 200; overflow-y: auto; padding: 40px 30px; }
+  #overview.active { display: block; }
+  #overview h2 { font-size: 12px; color: var(--muted); margin-bottom: 24px; letter-spacing: .05em; text-transform: uppercase; }
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .overview-thumb { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; cursor: pointer; transition: all .2s; }
+  .overview-thumb:hover, .overview-thumb.active-thumb { border-color: var(--blue); background: var(--card2); }
+  .overview-thumb .thumb-num { font-size: 10px; color: var(--blue); font-weight: 700; margin-bottom: 6px; font-family: var(--mono); }
+  .overview-thumb .thumb-title { font-size: 12px; color: var(--text); font-weight: 600; line-height: 1.3; }
+  .overview-thumb .thumb-sub { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.3; }
+  #overview-close { position: fixed; top: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; z-index: 201; transition: all .2s; }
+  #overview-close:hover { border-color: var(--blue); color: var(--text); }
+
+  #kb-hint { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); font-size: 11px; color: rgba(148,163,184,.4); letter-spacing: .05em; z-index: 100; pointer-events: none; transition: opacity 1s; }
+  .back-link { position: fixed; top: max(18px, env(safe-area-inset-top, 0px)); left: 22px; font-size: 12px; color: var(--muted); z-index: 100; background: rgba(15,23,42,0.7); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(6px); text-decoration: none; transition: color .2s; }
+  .back-link:hover { color: var(--text); }
+  .slide::-webkit-scrollbar { width: 4px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  @media (max-width: 680px) {
+    .slide { padding: calc(50px + env(safe-area-inset-top, 0px)) 14px calc(48px + env(safe-area-inset-bottom, 0px)); align-items: flex-start; }
+    .nav-btn { display: none; }
+    .caption-row { grid-template-columns: 1fr; }
+    #overview { padding: calc(24px + env(safe-area-inset-top, 0px)) 16px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<a href="dna-pathways.html" class="back-link">← Pathway Overview</a>
+<div id="slide-counter">1 / 6</div>
+<div id="progress-bar"></div>
+<button class="nav-btn" id="nav-prev">&#8592;</button>
+<button class="nav-btn" id="nav-next">&#8594;</button>
+<div id="kb-hint">← → Space to navigate &nbsp;|&nbsp; O for overview &nbsp;|&nbsp; F for fullscreen</div>
+
+<div id="overview">
+  <button id="overview-close">&#x2715; Close Overview</button>
+  <h2>All Diagrams</h2>
+  <div class="overview-grid" id="overview-grid"></div>
+</div>
+
+<div id="deck">
+
+<!-- ======================================================
+     SLIDE 1: Folate Metabolism
+     ====================================================== -->
+<div class="slide active" data-title="Folate Metabolism" data-sub="MTHFR bottleneck &amp; cofactor requirements">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 1 &middot; Methylation</div>
+  <h1 class="slide-title">The Folate Reduction Pathway</h1>
+  <p class="slide-subtitle">Dietary folate must be converted through four enzymatic steps before it can donate methyl groups. The MTHFR step is your most significant bottleneck &mdash; impaired by a C677T variant and dependent on riboflavin as a cofactor.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s1-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s1-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s1-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s1-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s1-ab" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+      <marker id="s1-ap" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#8b5cf6"/></marker>
+    </defs>
+
+    <!-- ===== MAIN COLUMN ===== -->
+
+    <!-- Node 1: Dietary Folate -->
+    <rect x="165" y="25" width="240" height="40" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="285" y="42" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700">Dietary Folate</text>
+    <text x="285" y="58" text-anchor="middle" fill="#4ade80" font-size="9">(pteroylmonoglutamic acid)</text>
+
+    <!-- Arrow 1→2 -->
+    <line x1="285" y1="65" x2="285" y2="98" stroke="#475569" stroke-width="1.5" marker-end="url(#s1-a)"/>
+    <!-- Enzyme pill: DHFR -->
+    <rect x="292" y="74" width="52" height="18" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="318" y="86" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">DHFR</text>
+    <text x="318" y="96" text-anchor="middle" fill="#64748b" font-size="8">(NADPH)</text>
+
+    <!-- Node 2: DHF -->
+    <rect x="165" y="98" width="240" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="285" y="115" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Dihydrofolate (DHF)</text>
+    <text x="285" y="130" text-anchor="middle" fill="#64748b" font-size="9">(H&#x2082;-pteroylglutamate)</text>
+
+    <!-- Arrow 2→3 -->
+    <line x1="285" y1="138" x2="285" y2="171" stroke="#475569" stroke-width="1.5" marker-end="url(#s1-a)"/>
+    <!-- Enzyme pill: DHFR -->
+    <rect x="292" y="147" width="52" height="18" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="318" y="159" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">DHFR</text>
+    <text x="318" y="169" text-anchor="middle" fill="#64748b" font-size="8">(NADPH)</text>
+
+    <!-- Node 3: THF -->
+    <rect x="165" y="171" width="240" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="285" y="188" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Tetrahydrofolate (THF)</text>
+    <text x="285" y="203" text-anchor="middle" fill="#64748b" font-size="9">(H&#x2084;-pteroylglutamate)</text>
+
+    <!-- Arrow 3→4 -->
+    <line x1="285" y1="211" x2="285" y2="244" stroke="#475569" stroke-width="1.5" marker-end="url(#s1-a)"/>
+    <!-- Enzyme pill: SHMT -->
+    <rect x="292" y="220" width="60" height="18" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="322" y="232" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">SHMT</text>
+    <text x="322" y="242" text-anchor="middle" fill="#64748b" font-size="8">(+ serine)</text>
+
+    <!-- Node 4: 5,10-methylene-THF -->
+    <rect x="165" y="244" width="240" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="285" y="261" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">5,10-methylene-THF</text>
+    <text x="285" y="276" text-anchor="middle" fill="#64748b" font-size="9">(key one-carbon intermediate)</text>
+
+    <!-- Arrow 4→5 RED DASHED (MTHFR step) -->
+    <line x1="285" y1="284" x2="285" y2="363" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#s1-ar)"/>
+
+    <!-- MTHFR enzyme pill (large, red) -->
+    <rect x="292" y="312" width="76" height="24" rx="4" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="330" y="328" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="700" font-style="italic">MTHFR &#x26A0;</text>
+
+    <!-- Cofactor annotation: FAD/riboflavin -->
+    <text x="195" y="324" text-anchor="end" fill="#8b5cf6" font-size="8" font-style="italic">(FAD/riboflavin)</text>
+    <line x1="197" y1="322" x2="290" y2="322" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#s1-ap)"/>
+
+    <!-- Node 5: 5-MTHF (RED, impaired output) -->
+    <rect x="165" y="363" width="240" height="40" rx="8" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="2"/>
+    <text x="285" y="380" text-anchor="middle" fill="#fca5a5" font-size="13" font-weight="700">5-methyl-THF (5-MTHF)</text>
+    <text x="285" y="395" text-anchor="middle" fill="#ef4444" font-size="9">&#x2B07; reduced output (30&#x2013;40% less)</text>
+
+    <!-- Output arrow right from Node5 -->
+    <line x1="405" y1="383" x2="450" y2="383" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s1-ab)"/>
+    <text x="468" y="387" fill="#60a5fa" font-size="10">&#x2192; Methionine Cycle</text>
+
+    <!-- ===== SIDE COLUMN: Folinic Acid bypass ===== -->
+
+    <!-- NodeA: Folinic Acid -->
+    <rect x="485" y="171" width="240" height="40" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="605" y="188" text-anchor="middle" fill="#86efac" font-size="12" font-weight="700">Folinic Acid (5-formyl-THF)</text>
+    <text x="605" y="203" text-anchor="middle" fill="#4ade80" font-size="8">&#x2190; supplement &#x2713; bypasses MTHFR</text>
+
+    <!-- A→B arrow ORANGE DASHED -->
+    <line x1="605" y1="211" x2="605" y2="244" stroke="#f97316" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#s1-ao)"/>
+    <!-- Enzyme pill: MTHFS orange -->
+    <rect x="612" y="220" width="62" height="18" rx="4" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="1"/>
+    <text x="643" y="232" text-anchor="middle" fill="#fdba74" font-size="9" font-weight="700" font-style="italic">MTHFS &#x26A0;</text>
+
+    <!-- NodeB: 5,10-methenyl-THF -->
+    <rect x="485" y="244" width="240" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="605" y="261" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">5,10-methenyl-THF</text>
+    <text x="605" y="276" text-anchor="middle" fill="#64748b" font-size="9">(via MTHFD1 &#x2192; methylene)</text>
+
+    <!-- B → Node4 horizontal arrow GRAY pointing left -->
+    <line x1="485" y1="264" x2="407" y2="264" stroke="#475569" stroke-width="1.5" marker-end="url(#s1-a)"/>
+    <!-- Enzyme pill above the horizontal arrow -->
+    <rect x="425" y="252" width="52" height="16" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="451" y="263" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">MTHFD1</text>
+
+    <!-- ===== LEFT-SIDE MTHFR ANNOTATION BOX ===== -->
+    <rect x="5" y="295" width="150" height="98" rx="6" fill="rgba(239,68,68,0.08)" stroke="#ef4444" stroke-width="1"/>
+    <text x="80" y="313" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700">C677T (rs1801133)</text>
+    <text x="80" y="328" text-anchor="middle" fill="#94a3b8" font-size="9">&#x2193; 30&#x2013;40% activity</text>
+    <text x="80" y="343" text-anchor="middle" fill="#94a3b8" font-size="9">less 5-MTHF produced</text>
+    <text x="80" y="358" text-anchor="middle" fill="#94a3b8" font-size="9">riboflavin (R5P) needed</text>
+    <text x="80" y="373" text-anchor="middle" fill="#94a3b8" font-size="9">as FAD cofactor</text>
+    <!-- Dashed connecting line from annotation box to enzyme pill -->
+    <line x1="155" y1="330" x2="290" y2="324" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-red">What Breaks</div>C677T variant reduces MTHFR efficiency by 30&ndash;40%. The enzyme converts 5,10-methylene-THF &#x2192; 5-MTHF but only functions with riboflavin (FAD) bound. Without adequate B2, the enzyme is inactive even if present.</div>
+    <div class="caption-card"><div class="cc-label cc-green">Interventions</div>(1) Riboflavin R5P restores MTHFR function. (2) Folinic acid (5-formyl-THF) bypasses MTHFR and enters the pool at the 5,10-methenyl-THF step, but the MTHFS variant (rs6495446) also reduces this conversion. Both variants compound the downstream 5-MTHF shortage.</div>
+  </div>
+</div>
+</div>
+
+
+<!-- ======================================================
+     SLIDE 2: Methionine / SAM Cycle
+     ====================================================== -->
+<div class="slide" data-title="Methionine / SAM Cycle" data-sub="SAM synthesis, methylation, and homocysteine recycling">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 2 &middot; Methylation</div>
+  <h1 class="slide-title">The Methionine / SAM Cycle</h1>
+  <p class="slide-subtitle">SAM (S-adenosylmethionine) is the universal methyl donor. This cycle regenerates methionine from homocysteine, synthesizes SAM, and distributes methyl groups to hundreds of reactions. MTHFR impairment upstream starves this entire cycle.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s2-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s2-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s2-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s2-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s2-ab" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+    </defs>
+
+    <!-- ===== FOUR CYCLE NODES (diamond/rectangular layout) ===== -->
+
+    <!-- Homocysteine (Hcy) — LEFT -->
+    <rect x="8" y="180" width="224" height="40" rx="8" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="120" y="197" text-anchor="middle" fill="#fca5a5" font-size="13" font-weight="700">Homocysteine (Hcy)</text>
+    <text x="120" y="212" text-anchor="middle" fill="#64748b" font-size="9">(branch: transsulfuration &#x2193;)</text>
+
+    <!-- Methionine — TOP -->
+    <rect x="278" y="35" width="244" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="400" y="52" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Methionine</text>
+    <text x="400" y="67" text-anchor="middle" fill="#64748b" font-size="9">(essential amino acid)</text>
+
+    <!-- SAM — RIGHT -->
+    <rect x="568" y="180" width="224" height="40" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="680" y="197" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="700">SAM</text>
+    <text x="680" y="212" text-anchor="middle" fill="#64748b" font-size="9">(S-adenosylmethionine · methyl donor)</text>
+
+    <!-- SAH — BOTTOM -->
+    <rect x="278" y="325" width="244" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="400" y="342" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">SAH</text>
+    <text x="400" y="357" text-anchor="middle" fill="#64748b" font-size="9">(S-adenosylhomocysteine)</text>
+
+    <!-- ===== CYCLE ARROWS (clockwise) ===== -->
+
+    <!-- Hcy → Met (RED because 5-MTHF supply is low) -->
+    <line x1="200" y1="190" x2="278" y2="75" stroke="#ef4444" stroke-width="1.5" marker-end="url(#s2-ar)"/>
+    <!-- MTR enzyme pill (red, impaired) -->
+    <rect x="210" y="118" width="48" height="22" rx="4" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1"/>
+    <text x="234" y="131" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700" font-style="italic">MTR</text>
+    <!-- Cofactor annotation -->
+    <text x="175" y="105" text-anchor="middle" fill="#8b5cf6" font-size="8" font-style="italic">B12 (cobalamin)</text>
+    <text x="175" y="116" text-anchor="middle" fill="#ef4444" font-size="8">5-MTHF &#x2193;</text>
+
+    <!-- Met → SAM -->
+    <line x1="522" y1="55" x2="568" y2="190" stroke="#475569" stroke-width="1.5" marker-end="url(#s2-a)"/>
+    <!-- MAT enzyme pill -->
+    <rect x="527" y="110" width="66" height="20" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="560" y="124" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">MAT (+ATP)</text>
+
+    <!-- SAM → SAH (methyltransferases) -->
+    <line x1="568" y1="220" x2="522" y2="325" stroke="#3b82f6" stroke-width="2" marker-end="url(#s2-ab)"/>
+    <!-- Methyltransferases pill -->
+    <rect x="497" y="253" width="100" height="22" rx="4" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="1"/>
+    <text x="547" y="267" text-anchor="middle" fill="#93c5fd" font-size="8.5" font-style="italic">Methyltransferases</text>
+    <text x="547" y="286" text-anchor="middle" fill="#64748b" font-size="8">transfers CH&#x2083; group</text>
+
+    <!-- SAH → Hcy -->
+    <line x1="278" y1="345" x2="232" y2="220" stroke="#475569" stroke-width="1.5" marker-end="url(#s2-a)"/>
+    <!-- SAHH enzyme pill -->
+    <rect x="220" y="278" width="46" height="20" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="243" y="292" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">SAHH</text>
+
+    <!-- ===== BHMT BYPASS (blue dashed) ===== -->
+    <path d="M120 180 Q120 100 278 55" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#s2-ab)"/>
+    <text x="148" y="108" fill="#60a5fa" font-size="9" font-weight="700">BHMT</text>
+    <text x="140" y="120" fill="#60a5fa" font-size="8" font-style="italic">(TMG/betaine)</text>
+
+    <!-- ===== SAM CONSUMERS BOX (right) ===== -->
+    <rect x="738" y="140" width="78" height="120" rx="6" fill="rgba(59,130,246,0.08)" stroke="#3b82f6" stroke-width="1"/>
+    <!-- Arrow SAM → consumers -->
+    <line x1="792" y1="200" x2="737" y2="200" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s2-ab)" opacity="0.6"/>
+    <text x="777" y="158" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="700">SAM</text>
+    <text x="777" y="170" text-anchor="middle" fill="#60a5fa" font-size="8">consumers</text>
+    <text x="777" y="186" text-anchor="middle" fill="#93c5fd" font-size="8.5">Creatine</text>
+    <text x="777" y="198" text-anchor="middle" fill="#64748b" font-size="8">~70%</text>
+    <text x="777" y="211" text-anchor="middle" fill="#93c5fd" font-size="8">DNA Methyl.</text>
+    <text x="777" y="223" text-anchor="middle" fill="#93c5fd" font-size="8">Neuro-</text>
+    <text x="777" y="233" text-anchor="middle" fill="#93c5fd" font-size="8">transmitters</text>
+    <text x="777" y="247" text-anchor="middle" fill="#93c5fd" font-size="8">Phospholipids</text>
+
+    <!-- ===== ANNOTATIONS ===== -->
+    <!-- Hcy accumulation note -->
+    <text x="120" y="232" text-anchor="middle" fill="#ef4444" font-size="8" font-style="italic">&#x2191; Hcy accumulates when methylation impaired</text>
+
+    <!-- Transsulfuration exit -->
+    <line x1="120" y1="220" x2="120" y2="255" stroke="#f97316" stroke-width="1.5" marker-end="url(#s2-ao)"/>
+    <text x="128" y="245" fill="#f97316" font-size="9">&#x2192; Transsulfuration</text>
+
+    <!-- SAM depletion note -->
+    <text x="680" y="232" text-anchor="middle" fill="#ef4444" font-size="8" font-style="italic">&#x2193; SAM when MTHFR impaired</text>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-red">When Cycle Slows</div>Reduced 5-MTHF (from MTHFR impairment) means MTR cannot efficiently remethylate homocysteine. Hcy accumulates. SAM production drops. Downstream methylation reactions are all affected &mdash; including creatine synthesis (~70% of all SAM consumption), DNA methylation, and neurotransmitter metabolism.</div>
+    <div class="caption-card"><div class="cc-label cc-green">Interventions</div>(1) Riboflavin fixes MTHFR &#x2192; more 5-MTHF &#x2192; more remethylation. (2) TMG (betaine) drives the BHMT bypass directly. (3) Creatine supplementation removes the largest single SAM consumer, immediately relieving pressure on the cycle. These three together are the highest-leverage moves.</div>
+  </div>
+</div>
+</div>
+
+
+<!-- ======================================================
+     SLIDE 3: Transsulfuration Pathway
+     ====================================================== -->
+<div class="slide" data-title="Transsulfuration Pathway" data-sub="Homocysteine &#x2192; cysteine &#x2192; GSH, taurine, H&#x2082;S">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 3 &middot; Sulfur Metabolism</div>
+  <h1 class="slide-title">Transsulfuration: Homocysteine to Cysteine and Beyond</h1>
+  <p class="slide-subtitle">Homocysteine exits the methionine cycle into the transsulfuration pathway via two B6-dependent enzymes. The CTH variant reduces cysteine output, limiting three critical downstream branches: glutathione, taurine, and H&#x2082;S.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s3-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s3-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s3-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s3-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s3-ab" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+      <marker id="s3-ay" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#eab308"/></marker>
+    </defs>
+
+    <!-- ===== LINEAR FLOW ===== -->
+
+    <!-- Hcy + Serine: input node -->
+    <rect x="10" y="100" width="160" height="40" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="90" y="116" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="700">Homocysteine</text>
+    <text x="90" y="129" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="700">+ Serine</text>
+
+    <!-- Hcy → Cystathionine -->
+    <line x1="170" y1="120" x2="200" y2="120" stroke="#475569" stroke-width="1.5" marker-end="url(#s3-a)"/>
+    <!-- CBS enzyme pill (normal) -->
+    <rect x="174" y="103" width="40" height="16" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="194" y="114" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-style="italic">CBS</text>
+    <!-- Cofactor P5P -->
+    <text x="194" y="136" text-anchor="middle" fill="#8b5cf6" font-size="8" font-style="italic">(P5P/B6)</text>
+
+    <!-- Cystathionine node -->
+    <rect x="200" y="100" width="180" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="290" y="117" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">Cystathionine</text>
+    <text x="290" y="132" text-anchor="middle" fill="#64748b" font-size="9">(intermediate)</text>
+
+    <!-- Cystathionine → Cysteine -->
+    <line x1="380" y1="120" x2="408" y2="120" stroke="#f97316" stroke-width="1.5" marker-end="url(#s3-ao)"/>
+    <!-- CTH enzyme pill (ORANGE — het variant) -->
+    <rect x="381" y="103" width="50" height="17" rx="4" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="406" y="115" text-anchor="middle" fill="#fdba74" font-size="8.5" font-weight="700" font-style="italic">CTH &#x26A0;</text>
+    <!-- Cofactor annotation orange -->
+    <text x="406" y="136" text-anchor="middle" fill="#f97316" font-size="7.5" font-style="italic">(P5P/B6) het &#x2192; &#x2193; activity</text>
+    <!-- Byproducts label -->
+    <text x="406" y="148" text-anchor="middle" fill="#64748b" font-size="7.5">+ &#x03B1;-ketobutyrate + NH&#x2083;</text>
+
+    <!-- Cysteine node (key branch point) -->
+    <rect x="408" y="100" width="164" height="40" rx="8" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="2"/>
+    <text x="490" y="117" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Cysteine</text>
+    <text x="490" y="132" text-anchor="middle" fill="#64748b" font-size="9">(branch point)</text>
+
+    <!-- ===== THREE BRANCHES FROM CYSTEINE ===== -->
+
+    <!-- Branch 1: GSH (left-down) -->
+    <line x1="435" y1="140" x2="300" y2="195" stroke="#22c55e" stroke-width="1.5" marker-end="url(#s3-ag)"/>
+    <!-- GCL+GS enzyme pill -->
+    <rect x="330" y="158" width="58" height="17" rx="4" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1"/>
+    <text x="359" y="170" text-anchor="middle" fill="#86efac" font-size="8.5" font-style="italic">GCL + GS</text>
+
+    <!-- GSH node -->
+    <rect x="198" y="220" width="204" height="42" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="2"/>
+    <text x="300" y="238" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700">Glutathione (GSH)</text>
+    <text x="300" y="252" text-anchor="middle" fill="#64748b" font-size="9">(master antioxidant)</text>
+    <text x="300" y="264" text-anchor="middle" fill="#ef4444" font-size="8.5">&#x2B07; REDUCED (CTH het)</text>
+
+    <!-- Branch 2: Taurine (center-down) -->
+    <line x1="490" y1="140" x2="490" y2="185" stroke="#475569" stroke-width="1.5" marker-end="url(#s3-a)"/>
+    <!-- Intermediate: Cysteine sulfinic acid -->
+    <rect x="402" y="185" width="176" height="28" rx="6" fill="rgba(30,41,59,0.7)" stroke="#334155" stroke-width="1"/>
+    <text x="490" y="202" text-anchor="middle" fill="#94a3b8" font-size="9">Cysteine sulfinic acid</text>
+    <line x1="490" y1="213" x2="490" y2="250" stroke="#475569" stroke-width="1.5" marker-end="url(#s3-a)"/>
+    <!-- CDO/CSAD enzyme labels -->
+    <text x="498" y="225" fill="#64748b" font-size="8">CDO</text>
+    <text x="498" y="238" fill="#64748b" font-size="8">CSAD</text>
+
+    <!-- Taurine node -->
+    <rect x="418" y="253" width="144" height="42" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="2"/>
+    <text x="490" y="271" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700">Taurine</text>
+    <text x="490" y="284" text-anchor="middle" fill="#64748b" font-size="8.5">(mitochondrial tRNA mod.)</text>
+    <text x="490" y="296" text-anchor="middle" fill="#ef4444" font-size="8.5">&#x2B07; REDUCED (CTH het)</text>
+
+    <!-- Branch 3: H2S (right-down) -->
+    <line x1="553" y1="140" x2="645" y2="192" stroke="#eab308" stroke-width="1.5" marker-end="url(#s3-ay)"/>
+    <text x="625" y="162" fill="#64748b" font-size="8.5">enzymatic</text>
+    <text x="625" y="174" fill="#64748b" font-size="8.5">+spontaneous</text>
+
+    <!-- H2S node -->
+    <rect x="592" y="220" width="120" height="42" rx="8" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="652" y="238" text-anchor="middle" fill="#fdba74" font-size="13" font-weight="700">H&#x2082;S</text>
+    <text x="652" y="252" text-anchor="middle" fill="#64748b" font-size="8.5">(can accumulate &#x2191;)</text>
+    <!-- Arrow to slide 4 -->
+    <line x1="712" y1="241" x2="745" y2="241" stroke="#f97316" stroke-width="1.5" marker-end="url(#s3-ao)"/>
+    <text x="748" y="245" fill="#f97316" font-size="8">&#x2192; Clearance</text>
+    <text x="748" y="256" fill="#f97316" font-size="8">(slide 4)</text>
+
+    <!-- ===== CTH ANNOTATION BOX ===== -->
+    <rect x="628" y="302" width="180" height="84" rx="6" fill="rgba(249,115,22,0.08)" stroke="#f97316" stroke-width="1"/>
+    <text x="718" y="319" text-anchor="middle" fill="#fdba74" font-size="9" font-weight="700">CTH heterozygous variant</text>
+    <text x="718" y="334" text-anchor="middle" fill="#94a3b8" font-size="8.5">&#x2193; cystathionase activity</text>
+    <text x="718" y="347" text-anchor="middle" fill="#94a3b8" font-size="8.5">less cysteine produced</text>
+    <text x="718" y="360" text-anchor="middle" fill="#94a3b8" font-size="8.5">all branches reduced</text>
+    <text x="718" y="373" text-anchor="middle" fill="#22c55e" font-size="8.5">Fix: P5P (active B6)</text>
+
+    <!-- CBS note -->
+    <text x="90" y="175" text-anchor="middle" fill="#64748b" font-size="8.5" font-style="italic">CBS: normal function</text>
+    <text x="90" y="187" text-anchor="middle" fill="#64748b" font-size="8.5" font-style="italic">B6/P5P cofactor</text>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-orange">CTH Variant Effect</div>The CTH heterozygous variant reduces cystathionase activity. Less cysteine is produced from cystathionine, which in turn limits all three downstream branches: glutathione (GSH), taurine synthesis, and the CBS/CTH-derived H&#x2082;S pool. Supplementing P5P (active B6) supports both CBS and CTH.</div>
+    <div class="caption-card"><div class="cc-label cc-red">Why GSH and Taurine Matter</div>Glutathione is the primary intracellular antioxidant; reduced levels worsen oxidative stress and impair detoxification. Taurine is incorporated into mitochondrial tRNA as a chemical modification required for proper translation of Complex I and IV subunits &mdash; reduced taurine directly impairs ETC protein synthesis.</div>
+  </div>
+</div>
+</div>
+
+
+<!-- ======================================================
+     SLIDE 4: H2S Oxidation Chain
+     ====================================================== -->
+<div class="slide" data-title="H&#x2082;S Oxidation Chain" data-sub="Sulfide clearance requires CoQ10 and molybdenum">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 4 &middot; Sulfur Clearance</div>
+  <h1 class="slide-title">H&#x2082;S Oxidation: Mitochondrial Clearance Chain</h1>
+  <p class="slide-subtitle">Hydrogen sulfide must be oxidized through a three-enzyme chain to reach its safe excreted form (sulfate). Each enzyme has a specific inorganic cofactor requirement. When CoQ10 or molybdenum is limiting, toxic intermediates accumulate.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s4-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s4-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s4-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s4-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s4-ap" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#8b5cf6"/></marker>
+    </defs>
+
+    <!-- ===== VERTICAL FLOW ===== -->
+
+    <!-- Node 1: H2S -->
+    <rect x="160" y="35" width="280" height="40" rx="8" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="2"/>
+    <text x="300" y="52" text-anchor="middle" fill="#fdba74" font-size="13" font-weight="700">H&#x2082;S (hydrogen sulfide)</text>
+    <text x="300" y="67" text-anchor="middle" fill="#64748b" font-size="9">(mitochondrial toxin at excess &middot; CBS/CTH byproduct)</text>
+
+    <!-- Arrow H2S → Persulfide -->
+    <line x1="300" y1="75" x2="300" y2="128" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#s4-ar)"/>
+    <!-- SQR enzyme pill (RED — requires CoQ10) -->
+    <rect x="307" y="95" width="50" height="20" rx="4" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="332" y="108" text-anchor="middle" fill="#fca5a5" font-size="9.5" font-weight="700" font-style="italic">SQR &#x26A0;</text>
+    <!-- CoQ10 cofactor annotation -->
+    <text x="145" y="100" text-anchor="end" fill="#22c55e" font-size="8" font-style="italic">(CoQ10 &#x2014; electron acceptor)</text>
+    <line x1="147" y1="98" x2="305" y2="105" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#s4-ag)"/>
+    <!-- SQR note -->
+    <text x="300" y="124" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">SQR = sulfide:quinone reductase</text>
+
+    <!-- Node 2: Persulfide -->
+    <rect x="185" y="130" width="230" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="300" y="147" text-anchor="middle" fill="#e2e8f0" font-size="13" font-weight="700">Persulfide (RSSH)</text>
+    <text x="300" y="162" text-anchor="middle" fill="#64748b" font-size="9">(reactive sulfur intermediate)</text>
+
+    <!-- Arrow Persulfide → Sulfite -->
+    <line x1="300" y1="170" x2="300" y2="222" stroke="#475569" stroke-width="1.5" marker-end="url(#s4-a)"/>
+    <!-- ETHE1 enzyme pill (normal) -->
+    <rect x="307" y="188" width="50" height="20" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="332" y="201" text-anchor="middle" fill="#94a3b8" font-size="9" font-style="italic">ETHE1</text>
+    <text x="332" y="216" text-anchor="middle" fill="#64748b" font-size="8">(persulfide dioxygenase)</text>
+
+    <!-- Node 3: Sulfite -->
+    <rect x="190" y="224" width="220" height="40" rx="8" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="300" y="241" text-anchor="middle" fill="#fdba74" font-size="13" font-weight="700">Sulfite (SO&#x2083;&#xB2;&#x207B;)</text>
+    <text x="300" y="256" text-anchor="middle" fill="#64748b" font-size="9">(neurological toxin if accumulated)</text>
+
+    <!-- Arrow Sulfite → Sulfate -->
+    <line x1="300" y1="264" x2="300" y2="317" stroke="#f97316" stroke-width="1.5" marker-end="url(#s4-ao)"/>
+    <!-- SUOX enzyme pill (ORANGE — molybdenum dependent) -->
+    <rect x="307" y="282" width="50" height="20" rx="4" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="332" y="295" text-anchor="middle" fill="#fdba74" font-size="9.5" font-weight="700" font-style="italic">SUOX</text>
+    <!-- Molybdenum cofactor annotation -->
+    <text x="145" y="295" text-anchor="end" fill="#8b5cf6" font-size="8" font-style="italic">(molybdopterin &middot; Mo required &#x2190;)</text>
+    <line x1="147" y1="293" x2="305" y2="293" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#s4-ap)"/>
+    <text x="332" y="314" text-anchor="middle" fill="#64748b" font-size="8">SUOX = sulfite oxidase</text>
+
+    <!-- Node 4: Sulfate -->
+    <rect x="190" y="319" width="220" height="40" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="300" y="336" text-anchor="middle" fill="#86efac" font-size="13" font-weight="700">Sulfate (SO&#x2084;&#xB2;&#x207B;)</text>
+    <text x="300" y="351" text-anchor="middle" fill="#64748b" font-size="9">(excreted in urine &middot; safe final form)</text>
+
+    <!-- Output arrow -->
+    <line x1="300" y1="359" x2="300" y2="390" stroke="#22c55e" stroke-width="1.5" marker-end="url(#s4-ag)"/>
+    <text x="310" y="382" fill="#64748b" font-size="9">&#x2192; urine excretion</text>
+
+    <!-- ===== RIGHT-SIDE ANNOTATIONS ===== -->
+
+    <!-- SQR / CoQ10 callout -->
+    <rect x="484" y="55" width="200" height="82" rx="6" fill="rgba(34,197,94,0.08)" stroke="#22c55e" stroke-width="1"/>
+    <text x="584" y="73" text-anchor="middle" fill="#86efac" font-size="9" font-weight="700">SQR &amp; CoQ10</text>
+    <text x="584" y="88" text-anchor="middle" fill="#94a3b8" font-size="8.5">CoQ10 is the electron acceptor</text>
+    <text x="584" y="100" text-anchor="middle" fill="#94a3b8" font-size="8.5">for SQR. When CoQ10 is low,</text>
+    <text x="584" y="112" text-anchor="middle" fill="#94a3b8" font-size="8.5">H&#x2082;S clearance slows and</text>
+    <text x="584" y="124" text-anchor="middle" fill="#94a3b8" font-size="8.5">H&#x2082;S can accumulate.</text>
+
+    <!-- SUOX / Molybdenum callout -->
+    <rect x="484" y="222" width="200" height="96" rx="6" fill="rgba(249,115,22,0.08)" stroke="#f97316" stroke-width="1"/>
+    <text x="584" y="240" text-anchor="middle" fill="#fdba74" font-size="9" font-weight="700">SUOX &amp; Molybdenum</text>
+    <text x="584" y="255" text-anchor="middle" fill="#94a3b8" font-size="8.5">Sulfite oxidase requires a</text>
+    <text x="584" y="267" text-anchor="middle" fill="#94a3b8" font-size="8.5">molybdenum cofactor</text>
+    <text x="584" y="279" text-anchor="middle" fill="#94a3b8" font-size="8.5">(molybdopterin). Mo deficiency</text>
+    <text x="584" y="291" text-anchor="middle" fill="#94a3b8" font-size="8.5">&#x2192; sulfite accumulates.</text>
+    <text x="584" y="305" text-anchor="middle" fill="#22c55e" font-size="8.5">Supplement: Mo 100&#x2013;300 mcg/day</text>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-red">When This Chain Backs Up</div>H&#x2082;S in excess inhibits Complex IV of the ETC (cytochrome c oxidase), blocking electron transport. Sulfite, if SUOX is limiting, is a neurological irritant. This creates a feedback loop: impaired ETC &#x2192; less CoQ10 cycling &#x2192; slower H&#x2082;S clearance &#x2192; more Complex IV inhibition.</div>
+    <div class="caption-card"><div class="cc-label cc-green">Supplement Targets</div>CoQ10 (as ubiquinol, 100&#x2013;200 mg/day): directly restores SQR electron acceptor capacity. Molybdenum (100&#x2013;300 mcg/day): cofactor for SUOX, enables sulfite &#x2192; sulfate conversion. These are the two direct interventions in this chain.</div>
+  </div>
+</div>
+</div>
+
+
+<!-- ======================================================
+     SLIDE 5: Electron Transport Chain
+     ====================================================== -->
+<div class="slide" data-title="Electron Transport Chain" data-sub="Complexes I&#x2013;V with ACAD9 assembly defect">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 5 &middot; Mitochondria</div>
+  <h1 class="slide-title">Mitochondrial Electron Transport Chain</h1>
+  <p class="slide-subtitle">NADH and FADH&#x2082; feed electrons into the ETC. Electron flow powers proton pumping across the inner membrane, and that proton gradient drives ATP synthesis. Your ACAD9 variant impairs Complex I assembly &mdash; fewer functional CI complexes are built.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s5-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s5-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s5-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s5-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s5-ab" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+      <marker id="s5-ay" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#eab308"/></marker>
+    </defs>
+
+    <!-- ===== ZONE BACKGROUNDS ===== -->
+    <!-- Matrix label -->
+    <text x="8" y="100" fill="#475569" font-size="10" font-weight="700" letter-spacing="1">MATRIX</text>
+
+    <!-- Inner membrane band -->
+    <rect x="0" y="115" width="820" height="150" fill="rgba(51,65,85,0.4)"/>
+    <text x="410" y="196" text-anchor="middle" fill="#475569" font-size="9" letter-spacing="2">&#x2014; &#x2014; INNER MITOCHONDRIAL MEMBRANE &#x2014; &#x2014;</text>
+
+    <!-- Intermembrane space label -->
+    <text x="8" y="280" fill="#475569" font-size="10" font-weight="700" letter-spacing="1">INTERMEMBRANE SPACE</text>
+
+    <!-- ===== COMPLEX I ===== -->
+    <rect x="30" y="115" width="135" height="150" rx="8" fill="rgba(239,68,68,0.12)" stroke="#ef4444" stroke-width="2"/>
+    <text x="97" y="140" text-anchor="middle" fill="#ef4444" font-size="12" font-weight="700">CI</text>
+    <text x="97" y="155" text-anchor="middle" fill="#fca5a5" font-size="9">NADH dehydr.</text>
+    <text x="97" y="170" text-anchor="middle" fill="#fca5a5" font-size="8" font-weight="700">ACAD9 assembly</text>
+    <text x="97" y="182" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="700">factor &#x26A0;</text>
+    <!-- Riboflavin note -->
+    <rect x="33" y="228" width="129" height="18" rx="4" fill="rgba(34,197,94,0.1)"/>
+    <text x="97" y="241" text-anchor="middle" fill="#86efac" font-size="8">Riboflavin (FAD cofactor)</text>
+    <!-- NADH input -->
+    <line x1="10" y1="100" x2="55" y2="118" stroke="#3b82f6" stroke-width="2" marker-end="url(#s5-ab)"/>
+    <text x="8" y="95" fill="#93c5fd" font-size="11" font-weight="700">NADH</text>
+
+    <!-- ===== COMPLEX II ===== -->
+    <rect x="180" y="165" width="105" height="100" rx="8" fill="rgba(30,41,59,0.8)" stroke="#475569" stroke-width="1.5"/>
+    <text x="232" y="188" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">CII</text>
+    <text x="232" y="203" text-anchor="middle" fill="#94a3b8" font-size="9">Succinate DH</text>
+    <text x="232" y="218" text-anchor="middle" fill="#64748b" font-size="8">FAD-dependent</text>
+    <text x="232" y="233" text-anchor="middle" fill="#64748b" font-size="8">no proton pump</text>
+    <!-- FADH2 input -->
+    <line x1="162" y1="148" x2="194" y2="168" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+    <text x="130" y="143" fill="#93c5fd" font-size="10" font-weight="700">FADH&#x2082;</text>
+
+    <!-- ===== CoQ10 POOL ===== -->
+    <rect x="298" y="165" width="80" height="100" rx="8" fill="rgba(249,115,22,0.12)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="338" y="205" text-anchor="middle" fill="#fdba74" font-size="10" font-weight="700">CoQ10</text>
+    <text x="338" y="219" text-anchor="middle" fill="#fdba74" font-size="9">pool</text>
+    <text x="338" y="233" text-anchor="middle" fill="#fdba74" font-size="8">(mobile)</text>
+    <!-- CI → CoQ10 -->
+    <line x1="165" y1="192" x2="296" y2="210" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+    <text x="230" y="198" text-anchor="middle" fill="#93c5fd" font-size="8">e&#x207B;</text>
+    <!-- CII → CoQ10 -->
+    <line x1="285" y1="215" x2="297" y2="215" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+
+    <!-- ===== COMPLEX III ===== -->
+    <rect x="390" y="115" width="110" height="150" rx="8" fill="rgba(30,41,59,0.8)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="445" y="140" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="700">CIII</text>
+    <text x="445" y="155" text-anchor="middle" fill="#94a3b8" font-size="9">Cyt bc&#x2081;</text>
+    <text x="445" y="170" text-anchor="middle" fill="#64748b" font-size="8">Rieske Fe-S</text>
+    <!-- CoQ10 → CIII -->
+    <line x1="378" y1="215" x2="388" y2="192" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+    <text x="384" y="210" fill="#93c5fd" font-size="8">e&#x207B;</text>
+
+    <!-- ===== Cytochrome c ===== -->
+    <rect x="513" y="165" width="65" height="100" rx="8" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="546" y="200" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="700">Cyt c</text>
+    <text x="546" y="215" text-anchor="middle" fill="#64748b" font-size="8">(mobile)</text>
+    <!-- CIII → Cyt c -->
+    <line x1="500" y1="192" x2="512" y2="200" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+
+    <!-- ===== COMPLEX IV ===== -->
+    <rect x="590" y="115" width="110" height="150" rx="8" fill="rgba(30,41,59,0.8)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="645" y="140" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="700">CIV</text>
+    <text x="645" y="155" text-anchor="middle" fill="#94a3b8" font-size="9">Cyt c oxidase</text>
+    <text x="645" y="170" text-anchor="middle" fill="#64748b" font-size="8">O&#x2082; &#x2192; H&#x2082;O</text>
+    <!-- Taurine support note -->
+    <rect x="593" y="228" width="104" height="18" rx="4" fill="rgba(34,197,94,0.08)"/>
+    <text x="645" y="241" text-anchor="middle" fill="#86efac" font-size="7.5">Taurine supports translation</text>
+    <!-- Cyt c → CIV -->
+    <line x1="578" y1="200" x2="588" y2="200" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#s5-ab)"/>
+
+    <!-- ===== COMPLEX V ===== -->
+    <rect x="715" y="115" width="98" height="150" rx="8" fill="rgba(34,197,94,0.12)" stroke="#22c55e" stroke-width="2"/>
+    <text x="764" y="145" text-anchor="middle" fill="#86efac" font-size="12" font-weight="700">CV</text>
+    <text x="764" y="160" text-anchor="middle" fill="#86efac" font-size="9">ATP synthase</text>
+    <text x="764" y="178" text-anchor="middle" fill="#64748b" font-size="8">ADP+P&#x1D62; &#x2192; ATP</text>
+    <!-- ATP output -->
+    <line x1="764" y1="265" x2="764" y2="295" stroke="#22c55e" stroke-width="2" marker-end="url(#s5-ag)"/>
+    <text x="764" y="308" text-anchor="middle" fill="#86efac" font-size="10" font-weight="700">ATP</text>
+
+    <!-- ===== PROTON PUMPING ===== -->
+    <!-- CI pumps H+ downward (into IMS) -->
+    <line x1="97" y1="265" x2="97" y2="292" stroke="#eab308" stroke-width="2" marker-end="url(#s5-ay)"/>
+    <text x="97" y="305" text-anchor="middle" fill="#fde047" font-size="9">4H&#x207A;</text>
+    <!-- CIII pumps H+ -->
+    <line x1="445" y1="265" x2="445" y2="292" stroke="#eab308" stroke-width="2" marker-end="url(#s5-ay)"/>
+    <text x="445" y="305" text-anchor="middle" fill="#fde047" font-size="9">4H&#x207A;</text>
+    <!-- CIV pumps H+ -->
+    <line x1="645" y1="265" x2="645" y2="292" stroke="#eab308" stroke-width="2" marker-end="url(#s5-ay)"/>
+    <text x="645" y="305" text-anchor="middle" fill="#fde047" font-size="9">2H&#x207A;</text>
+
+    <!-- H+ return through CV label -->
+    <text x="290" y="320" text-anchor="middle" fill="#fde047" font-size="8.5" opacity="0.8">&#x2191; proton gradient builds in IMS</text>
+    <text x="290" y="333" text-anchor="middle" fill="#64748b" font-size="8">H&#x207A; flows back through Complex V &#x2192; drives ATP synthesis</text>
+
+    <!-- H+ flow arc from IMS back into CV -->
+    <path d="M680 305 Q720 340 750 315" stroke="#eab308" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.5" marker-end="url(#s5-ay)"/>
+
+    <!-- O2 input at CIV -->
+    <line x1="700" y1="88" x2="665" y2="118" stroke="#475569" stroke-width="1.5" marker-end="url(#s5-a)"/>
+    <text x="708" y="83" fill="#94a3b8" font-size="9">O&#x2082;+4H&#x207A;</text>
+
+    <!-- ===== ACAD9 ANNOTATION BOX ===== -->
+    <rect x="20" y="5" width="165" height="100" rx="6" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1"/>
+    <text x="102" y="22" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700">ACAD9 (rs2240237)</text>
+    <text x="102" y="37" text-anchor="middle" fill="#94a3b8" font-size="8.5">Complex I assembly factor</text>
+    <text x="102" y="51" text-anchor="middle" fill="#94a3b8" font-size="8.5">Requires FAD (riboflavin)</text>
+    <text x="102" y="65" text-anchor="middle" fill="#ef4444" font-size="8.5">Variant &#x2192; &#x2193; CI units built</text>
+    <text x="102" y="79" text-anchor="middle" fill="#ef4444" font-size="8.5">&#x2192; less NADH entry</text>
+    <text x="102" y="93" text-anchor="middle" fill="#ef4444" font-size="8.5">&#x2192; less ATP</text>
+
+    <!-- RRM2B callout near CIV -->
+    <rect x="590" y="5" width="205" height="30" rx="4" fill="rgba(30,41,59,0.7)" stroke="#334155" stroke-width="1"/>
+    <text x="693" y="23" text-anchor="middle" fill="#64748b" font-size="8">RRM2B variant &#x2192; reduced mtDNA maintenance</text>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-red">ACAD9 Defect</div>ACAD9 is required to assemble Complex I from its 45 subunits. Without adequate ACAD9 activity, fewer functional CI complexes are built. NADH cannot enter the chain efficiently. This reduces proton pumping across CI, lowers the H&#x207A; gradient, and decreases ATP synthase output. Riboflavin (as FAD) is the cofactor that makes ACAD9 functional.</div>
+    <div class="caption-card"><div class="cc-label cc-purple">Why This Matters for Energy</div>Complex I handles ~40% of all NADH entering the ETC. A 20&#x2013;30% reduction in CI capacity meaningfully reduces total ATP production. This explains the chronic low energy and poor exercise recovery pattern &mdash; it&rsquo;s a mitochondrial throughput problem, not just substrate availability.</div>
+  </div>
+</div>
+</div>
+
+
+<!-- ======================================================
+     SLIDE 6: Vitamin D Activation
+     ====================================================== -->
+<div class="slide" data-title="Vitamin D Activation" data-sub="Three sequential impairments from UV to active calcitriol">
+<div class="slide-inner">
+  <div class="slide-eyebrow">Slide 6 &middot; Vitamin D</div>
+  <h1 class="slide-title">Vitamin D Activation: Three Sequential Impairments</h1>
+  <p class="slide-subtitle">Active vitamin D (calcitriol) requires sequential enzymatic steps from skin to liver to kidney, plus transport through blood. You carry variants that impair the liver hydroxylation step and reduce the binding affinity of the transport protein &mdash; a compounding deficit.</p>
+  <div class="divider"></div>
+
+  <div class="diagram-wrap">
+  <svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
+    <defs>
+      <marker id="s6-a" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#475569"/></marker>
+      <marker id="s6-ar" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#ef4444"/></marker>
+      <marker id="s6-ao" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#f97316"/></marker>
+      <marker id="s6-ag" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#22c55e"/></marker>
+      <marker id="s6-ab" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#3b82f6"/></marker>
+    </defs>
+
+    <!-- ===== VERTICAL FLOW ===== -->
+
+    <!-- Node 1: 7-Dehydrocholesterol -->
+    <rect x="163" y="25" width="264" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="295" y="42" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">7-Dehydrocholesterol (7-DHC)</text>
+    <text x="295" y="57" text-anchor="middle" fill="#64748b" font-size="9">(in skin epidermis)</text>
+
+    <!-- Arrow 7-DHC → D3 -->
+    <line x1="295" y1="65" x2="295" y2="113" stroke="#475569" stroke-width="1.5" marker-end="url(#s6-a)"/>
+    <!-- UV-B pill (non-enzymatic) -->
+    <rect x="303" y="80" width="110" height="18" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="358" y="92" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-style="italic">UV-B (290&#x2013;315 nm)</text>
+    <text x="295" y="110" text-anchor="middle" fill="#64748b" font-size="8">(non-enzymatic, thermal isomerization)</text>
+
+    <!-- Node 2: Cholecalciferol D3 -->
+    <rect x="163" y="115" width="264" height="40" rx="8" fill="rgba(30,41,59,0.8)" stroke="#334155" stroke-width="1.5"/>
+    <text x="295" y="132" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="700">Cholecalciferol (Vitamin D&#x2083;)</text>
+    <text x="295" y="147" text-anchor="middle" fill="#64748b" font-size="9">(pre-hormone form)</text>
+
+    <!-- Arrow D3 → 25-OH-D3 -->
+    <line x1="295" y1="155" x2="295" y2="208" stroke="#f97316" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#s6-ao)"/>
+    <!-- CYP2R1 pill (ORANGE — impaired) -->
+    <rect x="303" y="173" width="68" height="20" rx="4" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="1.5"/>
+    <text x="337" y="187" text-anchor="middle" fill="#fdba74" font-size="9.5" font-weight="700" font-style="italic">CYP2R1 &#x26A0;</text>
+    <text x="295" y="204" text-anchor="middle" fill="#64748b" font-size="8">(25-hydroxylase &middot; liver)</text>
+
+    <!-- Node 3: 25-OH-D3 -->
+    <rect x="163" y="210" width="264" height="40" rx="8" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="2"/>
+    <text x="295" y="227" text-anchor="middle" fill="#fdba74" font-size="12" font-weight="700">25-hydroxyvitamin D&#x2083; (calcidiol)</text>
+    <text x="295" y="242" text-anchor="middle" fill="#64748b" font-size="9">(storage/circulating form &middot; target 60&#x2013;80 ng/mL)</text>
+
+    <!-- Arrow 25-OH-D3 → GC transport -->
+    <line x1="295" y1="250" x2="295" y2="283" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#s6-ar)"/>
+
+    <!-- Node 4: GC Transport -->
+    <rect x="163" y="285" width="264" height="40" rx="8" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="2"/>
+    <text x="295" y="302" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="700">Transport via GC protein</text>
+    <text x="295" y="317" text-anchor="middle" fill="#64748b" font-size="9">(Gc2 haplotype &middot; reduced binding affinity)</text>
+
+    <!-- Arrow GC → calcitriol (kidney step) -->
+    <line x1="295" y1="325" x2="295" y2="368" stroke="#475569" stroke-width="1.5" marker-end="url(#s6-a)"/>
+    <!-- CYP27B1 pill (normal) -->
+    <rect x="303" y="339" width="72" height="20" rx="4" fill="rgba(30,41,59,0.9)" stroke="#475569" stroke-width="1"/>
+    <text x="339" y="352" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-style="italic">CYP27B1</text>
+    <text x="295" y="365" text-anchor="middle" fill="#64748b" font-size="8">(1&#x03B1;-hydroxylase &middot; kidney)</text>
+
+    <!-- Node 5: Calcitriol (active) -->
+    <rect x="163" y="370" width="264" height="40" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="2"/>
+    <text x="295" y="387" text-anchor="middle" fill="#86efac" font-size="12" font-weight="700">1,25-(OH)&#x2082;D&#x2083; (calcitriol)</text>
+    <text x="295" y="402" text-anchor="middle" fill="#64748b" font-size="9">(active hormone &middot; binds VDR &#x2192; gene expression)</text>
+
+    <!-- Output arrow right from calcitriol -->
+    <line x1="427" y1="390" x2="465" y2="390" stroke="#22c55e" stroke-width="1.5" marker-end="url(#s6-ag)"/>
+    <text x="470" y="386" fill="#86efac" font-size="8.5">&#x2192; VDR (nuclear receptor)</text>
+    <text x="470" y="398" fill="#64748b" font-size="8">gene expression: immunity,</text>
+    <text x="470" y="409" fill="#64748b" font-size="8">Ca&#xB2;&#x207A; absorption, differentiation</text>
+
+    <!-- ===== RIGHT-SIDE ANNOTATION BOXES ===== -->
+
+    <!-- CYP2R1 box (orange) -->
+    <rect x="500" y="152" width="198" height="80" rx="6" fill="rgba(249,115,22,0.08)" stroke="#f97316" stroke-width="1"/>
+    <text x="599" y="170" text-anchor="middle" fill="#fdba74" font-size="9" font-weight="700">CYP2R1 (rs10741657 variant)</text>
+    <text x="599" y="185" text-anchor="middle" fill="#94a3b8" font-size="8.5">&#x2193; liver 25-hydroxylation</text>
+    <text x="599" y="198" text-anchor="middle" fill="#94a3b8" font-size="8.5">D&#x2083; &#x2192; 25-OH-D&#x2083; is impaired</text>
+    <text x="599" y="211" text-anchor="middle" fill="#94a3b8" font-size="8.5">&#x2192; lower calcidiol levels</text>
+    <!-- Connecting dashed line -->
+    <line x1="427" y1="225" x2="498" y2="195" stroke="#f97316" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+
+    <!-- GC / Gc2 box (red) -->
+    <rect x="500" y="265" width="198" height="100" rx="6" fill="rgba(239,68,68,0.08)" stroke="#ef4444" stroke-width="1"/>
+    <text x="599" y="283" text-anchor="middle" fill="#fca5a5" font-size="9" font-weight="700">GC Gc2 haplotype</text>
+    <text x="599" y="298" text-anchor="middle" fill="#94a3b8" font-size="8.5">rs4588 + rs7041</text>
+    <text x="599" y="311" text-anchor="middle" fill="#94a3b8" font-size="8.5">~50% reduced binding affinity</text>
+    <text x="599" y="324" text-anchor="middle" fill="#94a3b8" font-size="8.5">less 25-OH-D&#x2083; transported</text>
+    <text x="599" y="337" text-anchor="middle" fill="#94a3b8" font-size="8.5">to kidney &#x2192; less activation</text>
+    <!-- Connecting dashed line -->
+    <line x1="427" y1="305" x2="498" y2="305" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2" opacity="0.4"/>
+
+    <!-- Protocol note (bottom-left) -->
+    <rect x="5" y="340" width="148" height="72" rx="6" fill="rgba(34,197,94,0.06)" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="79" y="357" text-anchor="middle" fill="#86efac" font-size="8.5" font-weight="700">Protocol Target</text>
+    <text x="79" y="370" text-anchor="middle" fill="#94a3b8" font-size="8">60&#x2013;80 ng/mL 25-OH-D&#x2083;</text>
+    <text x="79" y="382" text-anchor="middle" fill="#94a3b8" font-size="8">With 3 impairments:</text>
+    <text x="79" y="394" text-anchor="middle" fill="#94a3b8" font-size="8">5,000&#x2013;10,000 IU D&#x2083;/day</text>
+    <text x="79" y="406" text-anchor="middle" fill="#94a3b8" font-size="8">Recheck every 3 months</text>
+  </svg>
+  </div>
+
+  <div class="caption-row">
+    <div class="caption-card"><div class="cc-label cc-red">Three Sequential Hits</div>Each step is impaired: (1) CYP2R1 variant reduces liver 25-hydroxylation &mdash; less calcidiol made. (2) Gc2 haplotype reduces binding protein affinity by ~50% &mdash; less calcidiol reaches the kidney. (3) Combined effect means far less calcitriol (active form) is produced per IU of D&#x2083; consumed compared to someone without these variants.</div>
+    <div class="caption-card"><div class="cc-label cc-yellow">Why D Is Critical</div>Active calcitriol (1,25-OH&#x2082;D&#x2083;) regulates over 200 genes. Relevant to this profile: immune system regulation (including innate immunity, relevant to inflammation), calcium homeostasis, and gene expression in mitochondria-dense tissues. The standard &ldquo;normal&rdquo; range (30 ng/mL) is insufficient for this genotype &mdash; aim for 60&#x2013;80 ng/mL.</div>
+  </div>
+</div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+(function () {
+  'use strict';
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+  let overviewOpen = false;
+
+  const progressBar = document.getElementById('progress-bar');
+  const counter = document.getElementById('slide-counter');
+  const overviewEl = document.getElementById('overview');
+  const overviewGrid = document.getElementById('overview-grid');
+  const kbHint = document.getElementById('kb-hint');
+
+  counter.textContent = '1 / ' + total;
+
+  slides.forEach((slide, i) => {
+    const t = slide.dataset.title || ('Slide ' + (i + 1));
+    const s = slide.dataset.sub || '';
+    const thumb = document.createElement('div');
+    thumb.className = 'overview-thumb' + (i === 0 ? ' active-thumb' : '');
+    thumb.innerHTML = `<div class="thumb-num">SLIDE ${String(i + 1).padStart(2, '0')}</div><div class="thumb-title">${t}</div><div class="thumb-sub">${s}</div>`;
+    thumb.addEventListener('click', () => { goTo(i); closeOverview(); });
+    overviewGrid.appendChild(thumb);
+  });
+
+  function updateUI() {
+    counter.textContent = (current + 1) + ' / ' + total;
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    document.querySelectorAll('.overview-thumb').forEach((t, i) => {
+      t.classList.toggle('active-thumb', i === current);
+    });
+  }
+
+  function goTo(idx) {
+    if (idx === current) return;
+    if (idx < 0) idx = 0;
+    if (idx >= total) idx = total - 1;
+    const direction = idx > current ? 1 : -1;
+    const oldSlide = slides[current];
+    const newSlide = slides[idx];
+    oldSlide.classList.remove('active');
+    oldSlide.classList.add('exit-left');
+    setTimeout(() => { oldSlide.classList.remove('exit-left'); }, 450);
+    newSlide.style.transform = direction > 0 ? 'translateX(30px)' : 'translateX(-30px)';
+    newSlide.style.opacity = '0';
+    newSlide.classList.add('active');
+    void newSlide.offsetWidth;
+    newSlide.style.transform = '';
+    newSlide.style.opacity = '';
+    current = idx;
+    updateUI();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+  function openOverview() { overviewOpen = true; overviewEl.classList.add('active'); }
+  function closeOverview() { overviewOpen = false; overviewEl.classList.remove('active'); }
+
+  document.addEventListener('keydown', function (e) {
+    if (overviewOpen) {
+      if (e.key === 'Escape' || e.key.toLowerCase() === 'o') closeOverview();
+      return;
+    }
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prev(); break;
+      case ' ': e.preventDefault(); next(); break;
+      case 'o': case 'O': openOverview(); break;
+      case 'f': case 'F':
+        if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+        else { document.exitFullscreen && document.exitFullscreen(); }
+        break;
+    }
+  });
+
+  document.getElementById('nav-prev').addEventListener('click', prev);
+  document.getElementById('nav-next').addEventListener('click', next);
+  document.getElementById('overview-close').addEventListener('click', closeOverview);
+
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (overviewOpen) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  setTimeout(() => { kbHint.style.opacity = '0'; }, 5000);
+  updateUI();
+  progressBar.style.width = (1 / total * 100) + '%';
+})();
+</script>
+</body>
+</html>
