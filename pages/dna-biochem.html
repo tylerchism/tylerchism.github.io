@@ -18,7 +18,7 @@
     --mono: "Courier New", Courier, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
-  html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; user-select: none; }
+  html, body { width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; user-select: text; }
 
   #progress-bar { position: fixed; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--purple)); transition: width 0.4s cubic-bezier(.4,0,.2,1); z-index: 100; }
   #slide-counter { position: fixed; top: max(18px, env(safe-area-inset-top, 0px)); right: 22px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .05em; z-index: 100; background: rgba(15,23,42,0.7); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); backdrop-filter: blur(6px); }
@@ -189,7 +189,7 @@
     <!-- NodeA: Folinic Acid -->
     <rect x="485" y="171" width="240" height="40" rx="8" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5"/>
     <text x="605" y="188" text-anchor="middle" fill="#86efac" font-size="12" font-weight="700">Folinic Acid (5-formyl-THF)</text>
-    <text x="605" y="203" text-anchor="middle" fill="#4ade80" font-size="8">&#x2190; supplement &#x2713; bypasses MTHFR</text>
+    <text x="605" y="203" text-anchor="middle" fill="#4ade80" font-size="8">&#x2190; supplement &#x2713; bypasses DHFR (still passes MTHFR)</text>
 
     <!-- A→B arrow ORANGE DASHED -->
     <line x1="605" y1="211" x2="605" y2="244" stroke="#f97316" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#s1-ao)"/>
@@ -222,7 +222,7 @@
 
   <div class="caption-row">
     <div class="caption-card"><div class="cc-label cc-red">What Breaks</div>C677T variant reduces MTHFR efficiency by 30&ndash;40%. The enzyme converts 5,10-methylene-THF &#x2192; 5-MTHF but only functions with riboflavin (FAD) bound. Without adequate B2, the enzyme is inactive even if present.</div>
-    <div class="caption-card"><div class="cc-label cc-green">Interventions</div>(1) Riboflavin R5P restores MTHFR function. (2) Folinic acid (5-formyl-THF) bypasses MTHFR and enters the pool at the 5,10-methenyl-THF step, but the MTHFS variant (rs6495446) also reduces this conversion. Both variants compound the downstream 5-MTHF shortage.</div>
+    <div class="caption-card"><div class="cc-label cc-green">Interventions</div>(1) Riboflavin R5P restores MTHFR function. (2) Folinic acid (5-formyl-THF) bypasses <strong>DHFR</strong> &mdash; it enters the cycle as a ready THF form and feeds thymidylate synthase (DNA synthesis) directly. However, for <em>homocysteine remethylation</em> it still must pass through MTHFR to generate 5-MTHF. The MTHFS variant (rs6495446) also impairs the folinic acid &rarr; 5,10-methenyl-THF step, further limiting its effectiveness.</div>
   </div>
 </div>
 </div>
@@ -302,8 +302,25 @@
 
     <!-- ===== BHMT BYPASS (blue dashed) ===== -->
     <path d="M120 180 Q120 100 278 55" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#s2-ab)"/>
-    <text x="148" y="108" fill="#60a5fa" font-size="9" font-weight="700">BHMT</text>
-    <text x="140" y="120" fill="#60a5fa" font-size="8" font-style="italic">(TMG/betaine)</text>
+    <!-- TMG input label above enzyme pill -->
+    <text x="88" y="105" text-anchor="middle" fill="#60a5fa" font-size="8" font-style="italic">+ TMG (methyl donor)</text>
+    <!-- BHMT enzyme pill on arc -->
+    <rect x="52" y="110" width="72" height="22" rx="5" fill="rgba(59,130,246,0.18)" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="88" y="125" text-anchor="middle" fill="#93c5fd" font-size="9" font-weight="700">BHMT</text>
+    <!-- DMG output label below enzyme pill -->
+    <text x="88" y="144" text-anchor="middle" fill="#64748b" font-size="8" font-style="italic">&#x2192; DMG (used methyl)</text>
+
+    <!-- ===== BHMT Reaction Detail Box (lower-left) ===== -->
+    <rect x="5" y="278" width="220" height="100" rx="6" fill="rgba(59,130,246,0.06)" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4,3"/>
+    <text x="115" y="295" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="700">BHMT Bypass &#x2014; How It Works</text>
+    <text x="115" y="309" text-anchor="middle" fill="#93c5fd" font-size="8">Hcy + TMG (3 methyl groups)</text>
+    <text x="115" y="321" text-anchor="middle" fill="#64748b" font-size="8">  &#x2193; BHMT enzyme (liver-dominant)</text>
+    <text x="115" y="333" text-anchor="middle" fill="#93c5fd" font-size="8">Methionine + DMG (2 methyl groups)</text>
+    <text x="115" y="348" text-anchor="middle" fill="#64748b" font-size="7.5">No folate &middot; No B12 required</text>
+    <text x="115" y="360" text-anchor="middle" fill="#22c55e" font-size="7.5">Directly bypasses MTHFR impairment</text>
+    <text x="115" y="372" text-anchor="middle" fill="#64748b" font-size="7.5">Supplement: 1&#x2013;3 g TMG/day</text>
+    <!-- Faint connector from box to arc -->
+    <line x1="115" y1="278" x2="95" y2="165" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2" opacity="0.35"/>
 
     <!-- ===== SAM CONSUMERS BOX (right) ===== -->
     <rect x="738" y="140" width="78" height="120" rx="6" fill="rgba(59,130,246,0.08)" stroke="#3b82f6" stroke-width="1"/>
